@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{bc5f464d-edfa-4df7-849f-1a0df4bd3691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{185ab048-e4a5-441e-aa02-b2e9334beaa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CG_MATH">
+      <UniqueIdentifier>{97289bdc-f735-46e3-bacc-8702aa2640d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CG_MATH">
+      <UniqueIdentifier>{931a9e09-840b-4ad6-b052-55ab6a2e0fef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource Manager">
+      <UniqueIdentifier>{a74c4dbc-08a8-418d-ac44-a7782ad8f02e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Resource Manager">
+      <UniqueIdentifier>{d572323d-e010-4549-ac75-30bdf14d8f05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Util">
+      <UniqueIdentifier>{9bd25fee-2638-4b91-9640-75344e4a7faf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Render">
+      <UniqueIdentifier>{5b99a392-3113-41cf-baa9-a00cb1b24021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render">
+      <UniqueIdentifier>{7739b047-f0c5-4a8e-a041-95a8f6079e61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controller">
+      <UniqueIdentifier>{d47c313b-8f79-4ced-b60d-7c5d511c2c93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controller">
+      <UniqueIdentifier>{0a94ae0a-98c5-48e9-9b4d-d49f0ca7fed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource Manager\ShaderLoader">
+      <UniqueIdentifier>{cabdc027-9800-49c1-b8dc-b86384bdd99e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CG_MATH\EulerAngles.h">
+      <Filter>Header Files\CG_MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="CG_MATH\FPScamera.h">
+      <Filter>Header Files\CG_MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="CG_MATH\MathUtil.h">
+      <Filter>Header Files\CG_MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="CG_MATH\Matrix3x4.h">
+      <Filter>Header Files\CG_MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="CG_MATH\Matrix4x4.h">
+      <Filter>Header Files\CG_MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="CG_MATH\Quaternion.h">
+      <Filter>Header Files\CG_MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="CG_MATH\RotationMatrix.h">
+      <Filter>Header Files\CG_MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="CG_MATH\vector3.h">
+      <Filter>Header Files\CG_MATH</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Color.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\ColumnsMajorMatrix4x4.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Debug.h">
+      <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager\Mesh.h">
+      <Filter>Header Files\Resource Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager\MeshManager.h">
+      <Filter>Header Files\Resource Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager\TextureManger.h">
+      <Filter>Header Files\Resource Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\framebufferObject.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Render.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Controller.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CG_MATH\EulerAngles.cpp">
+      <Filter>Source Files\CG_MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="CG_MATH\FPScamera.cpp">
+      <Filter>Source Files\CG_MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="CG_MATH\MathUtil.cpp">
+      <Filter>Source Files\CG_MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="CG_MATH\Matrix3x4.cpp">
+      <Filter>Source Files\CG_MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="CG_MATH\Matrix4x4.cpp">
+      <Filter>Source Files\CG_MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="CG_MATH\Quaternion.cpp">
+      <Filter>Source Files\CG_MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="CG_MATH\RotationMatrix.cpp">
+      <Filter>Source Files\CG_MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="CG_MATH\vector3.cpp">
+      <Filter>Source Files\CG_MATH</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ResourceManager\glm.cpp">
+      <Filter>Source Files\Resource Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\Mesh.cpp">
+      <Filter>Source Files\Resource Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\MeshManager.cpp">
+      <Filter>Source Files\Resource Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\TextureManger.cpp">
+      <Filter>Source Files\Resource Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\shaderLoader\critsect.cpp">
+      <Filter>Source Files\Resource Manager\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\shaderLoader\shader_glsl.cpp">
+      <Filter>Source Files\Resource Manager\ShaderLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\framebufferObject.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Render.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\Controller.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
