@@ -1,0 +1,23 @@
+#version 440
+layout (location = 0) in vec3 Position;
+layout (location = 1) in vec2 texcoord;
+layout (location = 2) in vec3 Normal;
+
+// model Matrix 必须是正交的，只包含旋转和平移， 不能有缩放， 否则Normal 计算有错误。
+uniform mat4 modelMatrix;
+uniform mat4 ViewAndPerspectiveMatrix;
+
+out vec3 worldPos;
+out vec3 worldN;
+out vec2 uv;
+
+void main()
+{
+
+   worldPos = (modelMatrix * vec4(Position, 1.0)).xyz;
+   worldN =  (modelMatrix * vec4(Normal.xyz, 0.0)).xyz;
+
+   gl_Position = ViewAndPerspectiveMatrix * vec4(worldPos, 1.0);
+  	
+   uv = vec2(texcoord.x, 1-texcoord.y);
+}
