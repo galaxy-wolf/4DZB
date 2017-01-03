@@ -318,3 +318,12 @@ void Render::pass0()
 
 	CHECK_ERRORS();
 }
+
+void Render::pass1()
+{
+
+}
+
+void Render::pass2()
+{
+}

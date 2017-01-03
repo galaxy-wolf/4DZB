@@ -13,18 +13,18 @@ using namespace std;
 using namespace CG_MATH;
 
 void init();
-void Display();
+void Frame();
 void mouse(int button, int state, int x, int y) {
 	Controller::getInstance().mouse(button, state, x, y);
 }
 void motion(int x, int y) {
-
 	Controller::getInstance().motion(x, y);
 }
 void keyboard(unsigned char key, int x, int y) {
-
 	Controller::getInstance().keyboard(key, x, y);
 }
+
+
 
 int main(int argc, char *argv[])
 {
@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(512, 512);
 	glutCreateWindow("4DZB");
-	glutDisplayFunc(&Display);
-	glutIdleFunc(&Display);
+	//glutDisplayFunc(&Frame);
+	glutIdleFunc(&Frame);
 	glutKeyboardFunc(&keyboard);
 	glutMouseFunc(&mouse);
 	glutMotionFunc(&motion);
@@ -88,9 +88,10 @@ void init() {
 }
 
 void Display() {
+	// Draw model.
 
 	Render &render = Render::getInstance();
-	
+
 	render.m_cameraPos = Controller::getInstance().m_camera.pos;
 	render.m_viewMatrix = Controller::getInstance().m_camera.getMatrix();
 
@@ -104,5 +105,16 @@ void Display() {
 
 	glutSwapBuffers();
 	glutPostRedisplay();
+}
 
+
+// 不限制帧率，每帧开始时，先更新场景，然后绘制。
+// 
+void Frame() {
+
+	// update model matrix.
+
+
+	
+	Display();
 }

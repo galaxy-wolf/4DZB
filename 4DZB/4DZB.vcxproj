@@ -20,6 +20,7 @@
     <ClInclude Include="CG_MATH\RotationMatrix.h" />
     <ClInclude Include="CG_MATH\vector3.h" />
     <ClInclude Include="Controller\Controller.h" />
+    <ClInclude Include="RectAreaLight.h" />
     <ClInclude Include="Render\framebufferObject.h" />
     <ClInclude Include="Render\Render.h" />
     <ClInclude Include="ResourceManager\Mesh.h" />
@@ -40,6 +41,7 @@
     <ClCompile Include="CG_MATH\vector3.cpp" />
     <ClCompile Include="Controller\Controller.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RectAreaLight.cpp" />
     <ClCompile Include="Render\framebufferObject.cpp" />
     <ClCompile Include="Render\Render.cpp" />
     <ClCompile Include="ResourceManager\glm.cpp" />

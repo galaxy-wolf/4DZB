@@ -33,6 +33,23 @@ public:
 
 
 	//公有变量
+
+
+	// m_vertices 存储方式为：
+	//|====================================
+	//|		     | 3 float position       |
+	//|		     --------------------------
+	//| vertex 0 | 3 float normal         |
+	//|          --------------------------
+	//|          | 2 float textcoordinate |
+	//|====================================
+	//|		     | 3 float position       |
+	//|		     --------------------------
+	//| vertex 1 | 3 float normal         |
+	//|          --------------------------
+	//|          | 2 float textcoordinate |
+	//|====================================
+	// ....
 	vector<float> m_vertices;
 	vector<GLMmaterial> m_materials;
 

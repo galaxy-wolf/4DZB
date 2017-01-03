@@ -37,6 +37,15 @@
     <Filter Include="Source Files\Resource Manager\ShaderLoader">
       <UniqueIdentifier>{cabdc027-9800-49c1-b8dc-b86384bdd99e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CUDA">
+      <UniqueIdentifier>{187f3888-30ed-4b2e-b951-f666e8a49519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Lights">
+      <UniqueIdentifier>{f2961000-9cfd-43b9-8cf9-5365cc8772a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Lights">
+      <UniqueIdentifier>{db69539b-2a02-44c3-920f-8669f08bc054}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CG_MATH\EulerAngles.h">
@@ -89,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="Controller\Controller.h">
       <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="RectAreaLight.h">
+      <Filter>Header Files\Lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="Controller\Controller.cpp">
       <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="RectAreaLight.cpp">
+      <Filter>Source Files\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
