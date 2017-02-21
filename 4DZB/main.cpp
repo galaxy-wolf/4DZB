@@ -70,7 +70,7 @@ void init() {
 
 	MeshManager& meshM = MeshManager::getInstance();
 	const string ResDir = "./Resources/";
-	meshM.addMesh(ResDir +  "tree4.obj");
+	meshM.addMesh(ResDir +  "dragon_1.obj");
 
 
 	TextureManager::getInstance().setBaseDirPath("./Resources/");

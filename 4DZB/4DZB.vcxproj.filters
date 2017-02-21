@@ -37,14 +37,23 @@
     <Filter Include="Source Files\Resource Manager\ShaderLoader">
       <UniqueIdentifier>{cabdc027-9800-49c1-b8dc-b86384bdd99e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CUDA">
-      <UniqueIdentifier>{187f3888-30ed-4b2e-b951-f666e8a49519}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Lights">
       <UniqueIdentifier>{f2961000-9cfd-43b9-8cf9-5365cc8772a8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Lights">
       <UniqueIdentifier>{db69539b-2a02-44c3-920f-8669f08bc054}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FDZB_soft_shadow">
+      <UniqueIdentifier>{187f3888-30ed-4b2e-b951-f666e8a49519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FDZB_soft_shadow\Util">
+      <UniqueIdentifier>{92592b6a-d91d-4e3b-a6c4-2c67e50bd572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FDZB_soft_shadow\Cuda">
+      <UniqueIdentifier>{4a651b31-fbd1-4b76-a0c6-4b400bcf80d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Util">
+      <UniqueIdentifier>{e025323a-df55-490f-8d41-58654ae85b8e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +110,42 @@
     </ClInclude>
     <ClInclude Include="RectAreaLight.h">
       <Filter>Header Files\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\constants.h">
+      <Filter>FDZB_soft_shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\api.h">
+      <Filter>FDZB_soft_shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\cuda\FourD.h">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\cuda\privateDefs.h">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\util\channel.h">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\util\cudaBuffer.h">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\util\debug.h">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\util\layeredSurface.h">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\util\OpenGLinteroperate.h">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\util\Util.h">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="FDZB_Soft_Shadow\AreaLightDesc.h">
+      <Filter>FDZB_soft_shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\SaveBMP.h">
+      <Filter>Header Files\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -159,8 +204,70 @@
     <ClCompile Include="RectAreaLight.cpp">
       <Filter>Source Files\Lights</Filter>
     </ClCompile>
+    <ClCompile Include="FDZB_Soft_Shadow\api.cpp">
+      <Filter>FDZB_soft_shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="FDZB_Soft_Shadow\util\channel.cpp">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="FDZB_Soft_Shadow\util\cudaBuffer.cpp">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="FDZB_Soft_Shadow\util\layeredSurface.cpp">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\saveBMP.cpp">
+      <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="FDZB_Soft_Shadow\util\debug.cpp">
+      <Filter>FDZB_soft_shadow\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="FDZB_Soft_Shadow\cuda\binRaster.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\blockAABBReduce.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\FDprojection.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step0_triangleSetup.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step2_1_samplerRectangleAABB.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step2_2_modelRectangleAABB.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step2_3_defineFDbuffer.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step3_bindSampleToBin.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step4_RasterizeTriangleToBin.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step5_1_prepareBin.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step5_2_calRef.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step5_2_shadowCal.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="FDZB_Soft_Shadow\cuda\FourD.cu">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

@@ -326,4 +326,5 @@ void Render::pass1()
 
 void Render::pass2()
 {
+
 }

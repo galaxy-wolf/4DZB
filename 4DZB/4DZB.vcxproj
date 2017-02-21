@@ -20,6 +20,17 @@
     <ClInclude Include="CG_MATH\RotationMatrix.h" />
     <ClInclude Include="CG_MATH\vector3.h" />
     <ClInclude Include="Controller\Controller.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\api.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\AreaLightDesc.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\constants.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\cuda\FourD.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\cuda\privateDefs.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\util\channel.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\util\cudaBuffer.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\util\debug.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\util\layeredSurface.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\util\OpenGLinteroperate.h" />
+    <ClInclude Include="FDZB_Soft_Shadow\util\Util.h" />
     <ClInclude Include="RectAreaLight.h" />
     <ClInclude Include="Render\framebufferObject.h" />
     <ClInclude Include="Render\Render.h" />
@@ -29,6 +40,7 @@
     <ClInclude Include="Util\Color.h" />
     <ClInclude Include="Util\ColumnsMajorMatrix4x4.h" />
     <ClInclude Include="Util\Debug.h" />
+    <ClInclude Include="Util\SaveBMP.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CG_MATH\EulerAngles.cpp" />
@@ -40,6 +52,11 @@
     <ClCompile Include="CG_MATH\RotationMatrix.cpp" />
     <ClCompile Include="CG_MATH\vector3.cpp" />
     <ClCompile Include="Controller\Controller.cpp" />
+    <ClCompile Include="FDZB_Soft_Shadow\api.cpp" />
+    <ClCompile Include="FDZB_Soft_Shadow\util\channel.cpp" />
+    <ClCompile Include="FDZB_Soft_Shadow\util\cudaBuffer.cpp" />
+    <ClCompile Include="FDZB_Soft_Shadow\util\debug.cpp" />
+    <ClCompile Include="FDZB_Soft_Shadow\util\layeredSurface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RectAreaLight.cpp" />
     <ClCompile Include="Render\framebufferObject.cpp" />
@@ -50,9 +67,31 @@
     <ClCompile Include="ResourceManager\shaderLoader\critsect.cpp" />
     <ClCompile Include="ResourceManager\shaderLoader\shader_glsl.cpp" />
     <ClCompile Include="ResourceManager\TextureManger.cpp" />
+    <ClCompile Include="Util\saveBMP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FDZB_Soft_Shadow\cuda\binRaster.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\blockAABBReduce.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\FDprojection.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step0_triangleSetup.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step2_1_samplerRectangleAABB.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step2_2_modelRectangleAABB.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step2_3_defineFDbuffer.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step3_bindSampleToBin.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step4_RasterizeTriangleToBin.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step5_1_prepareBin.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step5_2_calRef.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\Step5_2_shadowCal.inl" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="FDZB_Soft_Shadow\cuda\FourD.cu">
+      <CodeGeneration Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">compute_50,sm_50</CodeGeneration>
+      <CodeGeneration Condition="'$(Configuration)|$(Platform)'=='Release|x64'">compute_50,sm_50</CodeGeneration>
+    </CudaCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B6D91FF6-33E1-4E49-ACB7-EA3D225095C2}</ProjectGuid>
@@ -85,11 +124,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>./;C:\ProgramData\NVIDIA Corporation\CUDA Samples\v8.0\common\inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>./;C:\ProgramData\NVIDIA Corporation\CUDA Samples\v8.0\common\inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
     <ExecutablePath>../4DZB/;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
