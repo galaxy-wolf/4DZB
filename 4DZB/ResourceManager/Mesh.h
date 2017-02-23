@@ -27,7 +27,7 @@ public:
 
 	// Mesh 可以被移动，
 	// 删除默认拷贝构造函数后， 也会删除移动构造函数，这里启用移动构造函数.
-	Mesh(Mesh &&m) = default;
+	Mesh(Mesh &&m) noexcept;
 
 	//
 

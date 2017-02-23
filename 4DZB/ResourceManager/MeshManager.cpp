@@ -1,4 +1,5 @@
 #include "MeshManager.h"
+#include "..\FDZB_Soft_Shadow\api.h"
 
 MeshManager::MeshManager()
 	:m_VBO(0), m_IBO(0), m_verticesNum(0), m_indicesNum(0)
@@ -34,12 +35,12 @@ void MeshManager::addMesh(const string &path)
 void MeshManager::createGPUbufferForCUDA()
 {
 	vector<float> vertices;
-	vector<float> indices;
+	vector<GLuint> indices;
 
 	// 将所有模型的vertex 和 indices 合并到一起
 
-	for (int i = 0; i < m_meshes.size(); ++i) {
-
+	//for (int i = 0; i < m_meshes.size(); ++i) {
+	for (int i = 1; i < m_meshes.size(); ++i) {
 		const Mesh &m = m_meshes[i];
 
 		vertices.insert(vertices.end(), m.m_vertices.cbegin(), m.m_vertices.cend());
@@ -50,13 +51,14 @@ void MeshManager::createGPUbufferForCUDA()
 			
 			// for each indices
 			for (int k = 0; k < m.m_groupIndices[j].size(); ++k) {
-				indices.push_back(m.m_groupIndices[j][k] + m_meshVertexStart[i]);
+				//indices.push_back(m.m_groupIndices[j][k] + m_meshVertexStart[i]);
+				indices.push_back(m.m_groupIndices[j][k] + m_meshVertexStart[i] - m_meshVertexStart[1]);
 			}
 		}
 	}
 
 	// 记录buffer size
-	m_verticesNum = vertices.size() / 8;
+	m_verticesNum = vertices.size() / m_vtxSize;
 	m_indicesNum = indices.size();
 
 
@@ -81,6 +83,8 @@ void MeshManager::createGPUbufferForCUDA()
 		GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	FD::FDaddModel(m_VBO, m_IBO, m_vtxSize * sizeof(float), "first model");
 
 }
 

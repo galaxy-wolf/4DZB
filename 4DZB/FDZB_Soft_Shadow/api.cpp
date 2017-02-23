@@ -8,6 +8,8 @@
 #include "cuda/FourD.h"
 #include "util/debug.h"
 
+#include <helper_cuda.h>
+
 #include "api.h"
 
 namespace FD{
@@ -165,7 +167,9 @@ namespace FD{
 	void FDregisterGLres()
 	{
 		FDSample::registerGLtexture();
+		
 		FDresult.registerRes();
+		
 		for (int i = 0; i < FDscene.size(); i++)
 			FDscene[i].registerRes();
 
@@ -337,7 +341,7 @@ namespace FD{
 	
 
 #if REF_CAL
-		//FILE *f = fopen("boxCDLight.txt", "w");
+		FILE *f = fopen("boxCDLight.txt", "w");
 		if (curLight.lightResHeight <= 32 && curLight.lightResWidth <= 32){ // for refcal;
 			int cnt = 0;
 			for (int i = 0; i < curLight.lightResHeight; i++)
@@ -345,13 +349,13 @@ namespace FD{
 				for (int j = 0; j < curLight.lightResWidth; j++)
 				{
 					h_REF_CAL_lightPos[i * curLight.lightResWidth + j] = curLight.upRightCornerPosition + curLight.x_delt *j + curLight.y_delt *i;
-				//	float3 &p = h_REF_CAL_lightPos[i * curLight.lightResWidth + j];
-				//	fprintf(f, "light %d: %f %f %f %f\n", cnt++, p.x, p.y, p.z, 1.0f);
+					float3 &p = h_REF_CAL_lightPos[i * curLight.lightResWidth + j];
+					fprintf(f, "light %d: %f %f %f %f\n", cnt++, p.x, p.y, p.z, 1.0f);
 
 				}
 			}
 		}
-		//fclose(f);
+		fclose(f);
 		//exit(0x0000);
 		setRefLightPos();
 #endif
@@ -405,6 +409,8 @@ namespace FD{
 			FDresult.map();
 			for (int i = 0; i < FDscene.size(); i++)
 				FDscene[i].map();
+
+			getLastCudaError("555");
 		}
 
 			/////// set static param;
@@ -523,6 +529,7 @@ namespace FD{
 #else
 				shadowCal();
 #endif
+				
 			}
 		}
 
@@ -531,11 +538,13 @@ namespace FD{
 		/////// unmap gl res;
 		{
 			FDSample::unmapGLtexture();
+			getLastCudaError("222");
 			FDresult.unmap();
 			for (int i = 0; i < FDscene.size(); i++)
 				FDscene[i].unmap();
 			
 		}
+		getLastCudaError("333");
 		
 		//exit(111);
 		cudaEventRecord(stop, 0);

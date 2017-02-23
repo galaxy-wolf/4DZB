@@ -1,7 +1,7 @@
 #pragma once
 
 #include "..\CG_MATH\FPScamera.h"
-
+#include "..\RectAreaLight.h"
 
 // 单例模式
 class Controller
@@ -25,10 +25,15 @@ public:
 	// 公有数据
 
 	FPScamera m_camera;
+	RectAreaLight m_light;
 
 private:
 	// 私有操作
-	Controller() :m_lastX(0), m_lastY(0), m_enableMouseMove(false) {}
+	Controller() :m_lastX(0), m_lastY(0), m_enableMouseMove(false) 
+	{
+		m_camera.pos.y = 2.0f;
+		m_camera.dir.pitch = -kPiOver2 / 8.0f;
+	}
 	~Controller()=default;
 
 

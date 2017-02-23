@@ -137,5 +137,8 @@ void refCal()
 
 	refCal_kernel << <grid, block >> >();
 
+	cudaThreadSynchronize();
+
+	getLastCudaError("refcal");
 }
 

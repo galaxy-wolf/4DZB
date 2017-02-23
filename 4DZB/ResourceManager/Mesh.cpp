@@ -51,6 +51,15 @@ Mesh::~Mesh()
 		glDeleteBuffers(m_groupIBO.size(), &m_groupIBO[0]);
 }
 
+Mesh::Mesh(Mesh &&m) noexcept
+	: m_vertices(m.m_vertices), m_materials(m.m_materials), m_groupIndices(m.m_groupIndices), m_groupMaterialID(m.m_groupMaterialID),
+	m_AABBmin(m.m_AABBmin), m_AABBmax(m.m_AABBmax), m_modelCenter(m.m_modelCenter),
+	m_ObjectToWorldMatrix(m.m_ObjectToWorldMatrix), m_VBO(m.m_VBO), m_groupIBO(m.m_groupIBO)
+{
+	m.m_groupIBO.clear();
+	m.m_VBO = 0;
+}
+
 
 void Mesh::compileMesh(const GLMmodel * model)
 {

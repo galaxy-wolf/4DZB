@@ -61,7 +61,7 @@ public:
 	int m_indicesNum;
 
 		//每个 mesh在Scene VBO 中的起始位置 
-	vector<int> m_meshVertexStart;
+	vector<GLuint> m_meshVertexStart;
 
 private:
 	

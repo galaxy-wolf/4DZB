@@ -39,8 +39,13 @@ int sampleMaxZcal(float & sampleMaxZ)
 	dim3 grid(iDiviUp(threadNum, block.x), 1, 1);
 	sampleMaxZcal_kernel << <grid, block >> >();
 	cudaThreadSynchronize();
+
+	getLastCudaError("sampleMaxZ cal");
+
 	thrust::device_ptr<float> dev_maxZ((float*)AABB3DReduceBuffer.devPtr);
 	sampleMaxZ = thrust::reduce(dev_maxZ, dev_maxZ + grid.x, -1.0f, thrust::maximum<float>());
+
+	getLastCudaError("sampleMaxZ reduce");
 
 	if (sampleMaxZ < 0.0f) // Ã»ÓÐÏñËØ
 		return 1;
@@ -126,7 +131,9 @@ int sampleRectangleAABBcal()
 	dim3 grid(iDiviUp(threadNum, block.x), 1, 1);
 	sampleRectangleAABBcal_kernel << <grid, block >> >();
 	cudaThreadSynchronize();
-	//saveAABBtemp("sampleAABBtemp", grid.x);
+	saveAABBtemp("sampleAABBtemp", grid.x);
+
+	getLastCudaError("sampleAABB cal");
 
 	while (grid.x > 1)
 	{
@@ -136,6 +143,7 @@ int sampleRectangleAABBcal()
 		cudaThreadSynchronize();
 	}
 
+	getLastCudaError("sampleAABB reduce");
 
 	// load to host;
 	checkCudaErrors(cudaMemcpy((void *)&sampleRectangleAABB[0], AABB3DReduceBuffer.devPtr, sizeof(float)*8, cudaMemcpyDeviceToHost));

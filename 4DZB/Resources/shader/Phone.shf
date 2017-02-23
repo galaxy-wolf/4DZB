@@ -61,16 +61,12 @@ void phongModel(vec3 position, vec3 norm)
 
 
 	diffuseAndSpec = vec4(diffuse + spec, 1.0f);
-//diffuse+spec + 
-	worldPosition = vec4(ambient.xyz + diffuseAndSpec.xyz, 1.0f);
 }
 
 void main()
 {
-    //worldPosition = vec4(worldPos, 1.0f);
+    worldPosition = vec4(worldPos, 1.0f);
 
 
 	phongModel(worldPos, worldN);
-
-	//worldPosition = vec4(worldPos, 1.0f);
 }

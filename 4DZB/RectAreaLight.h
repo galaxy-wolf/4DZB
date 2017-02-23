@@ -3,6 +3,7 @@
 #include "CG_MATH\EulerAngles.h"
 #include "CG_MATH\MathUtil.h"
 #include "CG_MATH\Quaternion.h"
+#include "Util\Color.h"
 
 class RectAreaLight
 {
@@ -10,25 +11,26 @@ public:
 
 	// 公共操作
 
-	RectAreaLight(CG_MATH::vector3 pos) :m_pos(pos), m_rightRadius(1.0f), m_topRadius(1.0f), m_ControlEulerAngle(CG_MATH::kEulerAnglesIdentity){
-		m_baseQuatDir.setToRotateAboutX(-CG_MATH::kPiOver2);
-	}
-
-	void move(float front, float right, float up);
-	void rotate3D(float heading, float pitch, float bank);
+	RectAreaLight() :
+		m_pos(CG_MATH::vector3(0.0f, 5.0f, -5.0f)),
+		m_width(.1f), m_height(0.1f),
+		m_Dir(0, -CG_MATH::kPiOver2, 0), 
+		m_La(0.2f), 
+		m_Ld(0.4f), 
+		m_Ls(0.3f)
+	{}
 	
 	// 公共数据
-	float  m_rightRadius;	//half width
-	float  m_topRadius;	//half height
+	float  m_width;	//half width
+	float  m_height;	//half height
+	
 	CG_MATH::vector3 m_pos;	//light position
+	CG_MATH::EulerAngles m_Dir; // light Dir
 
+	Color3f m_La;
+	Color3f m_Ld;
+	Color3f m_Ls;
+	
 
-private:
-
-	// 灯的坐标系与OpenGL相机初始坐标方向相同，然后绕X轴旋转-90度后，得到灯的初始方位m_baseQuatDir。
-	// 之后控制灯的方位由m_ControlEulerAngle在初始方位的基础上进行旋转
-
-	CG_MATH::EulerAngles m_ControlEulerAngle;
-	CG_MATH::Quaternion m_baseQuatDir;
 };
 

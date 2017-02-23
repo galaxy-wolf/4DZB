@@ -9,6 +9,8 @@
 #include "util\ColumnsMajorMatrix4x4.h"
 #include "util\Color.h"
 
+#include "FDZB_Soft_Shadow\api.h"
+
 using namespace std;
 using namespace CG_MATH;
 
@@ -48,7 +50,12 @@ int main(int argc, char *argv[])
 	//2£¬init glew£¬ load Ä£ÐÍ
 	init();
 
+
+	FD::FDregisterGLres();
+
 	glutMainLoop();
+
+	FD::FDunregisterGLres();
 	return 0;
 }
 
@@ -70,8 +77,12 @@ void init() {
 
 	MeshManager& meshM = MeshManager::getInstance();
 	const string ResDir = "./Resources/";
-	meshM.addMesh(ResDir +  "dragon_1.obj");
+	meshM.addMesh(ResDir + "plane.obj");
+	//meshM.addMesh(ResDir + "dragon_1.obj");
+	//meshM.addMesh(ResDir + "box.obj");
+	meshM.addMesh(ResDir + "triangle.obj");
 
+	meshM.createGPUbufferForCUDA();
 
 	TextureManager::getInstance().setBaseDirPath("./Resources/");
 
@@ -80,28 +91,34 @@ void init() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(&(static_cast<ColumnsMajorMatrix4x4>(Render::getInstance().m_projectMatrix)).m[0][0]);
 
-	Render::getInstance().resize(512, 512);
-	Render::getInstance().m_lightPos = vector3(5.0f, 5.0f, 5.0f);
-	Render::getInstance().m_lightLa = Color3f(0.2f);
-	Render::getInstance().m_lightLd = Color3f(0.4f);
-	Render::getInstance().m_lightLs = Color3f(0.3f);
 }
 
 void Display() {
 	// Draw model.
 
 	Render &render = Render::getInstance();
+	Controller &controller = Controller::getInstance();
 
-	render.m_cameraPos = Controller::getInstance().m_camera.pos;
-	render.m_viewMatrix = Controller::getInstance().m_camera.getMatrix();
+	// copy controller parm -=> render
+	render.m_cameraPos = controller.m_camera.pos;
+	render.m_viewMatrix = controller.m_camera.getMatrix();
+
+	render.m_lightPos = controller.m_light.m_pos;
+	render.m_lightWidth = controller.m_light.m_width;
+	render.m_lightHeight = controller.m_light.m_height;
+	render.m_lightLa = controller.m_light.m_La;
+	render.m_lightLd = controller.m_light.m_Ld;
+	render.m_lightLs = controller.m_light.m_Ls;
+	render.m_lightDir = controller.m_light.m_Dir;
+
+
 
 	render.pass0();
-
 	// cuda ;
+	render.pass1();
+	render.pass2();
 
-	//render.pass1();
 
-	//render.pass2();
 
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -112,9 +129,11 @@ void Display() {
 // 
 void Frame() {
 
+	// update light pos, radius
+
 	// update model matrix.
 
-
+	// update cuda model;
 	
 	Display();
 }

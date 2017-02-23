@@ -4,6 +4,7 @@
 #include <helper_cuda.h>
 #include "channel.h"
 #include "debug.h"
+
 namespace FD{
 	template<typename T>
 	class Buffer{
@@ -39,6 +40,8 @@ namespace FD{
 			checkCudaErrors(cudaDestroyTextureObject(m_tex));
 			m_binded = false;
 		}
+
+
 	private:
 		void applySize()
 		{
@@ -62,7 +65,7 @@ namespace FD{
 		}
 
 		void setDataChannel();
-
+	
 	private:
 		size_t size_in_byte;
 		size_t elementSize;

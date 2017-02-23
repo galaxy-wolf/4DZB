@@ -1,7 +1,7 @@
 #ifndef __BLOCK_AABB_REDUCE_CUH__
 #define __BLOCK_AABB_REDUCE_CUH__
 
-#define REDUCE_BLOCK_SIZE 1024
+#define REDUCE_BLOCK_SIZE 512
 //
 //#define fadd(a, b) (a+b)
 

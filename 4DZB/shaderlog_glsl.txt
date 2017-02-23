@@ -75,3 +75,21 @@ Creating Program:	Phone.shv	.shc	.she	.shg	Phone.shf	.shx
 	Info Log:
 
 
+
+
+Creating Program:	defer.shv	.shc	.she	.shg	defer.shf	.shx
+	local source addition:
+
+
+	Vertex:
+	Shader ./Resources/shader//defer.shv compile: success
+	Info Log:
+
+	Fragment:
+	Shader ./Resources/shader//defer.shf compile: success
+	Info Log:
+
+	Program link: success
+	Info Log:
+
+

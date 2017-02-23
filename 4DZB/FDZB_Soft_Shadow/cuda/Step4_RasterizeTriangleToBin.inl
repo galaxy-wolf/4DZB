@@ -38,7 +38,7 @@ __global__ void countPairNumForPerTri_kernel()
 	AABBe = tex1Dfetch<float4>(triangleAABBTex, tid << 1 | 1);
 
 	int result = 0;
-	if (AABBb.x >= AABBe.x || AABBb.y >= AABBe.y || AABBb.z >= AABBe.z || AABBb.x > lightPlaneE.x || AABBb.y > lightPlaneE.y || AABBe.x < lightPlaneB.x || AABBe.y < lightPlaneB.y) // AABB全部在lightPlane外部。
+	if (AABBb.x > AABBe.x || AABBb.y > AABBe.y || AABBb.z > AABBe.z || AABBb.x > lightPlaneE.x || AABBb.y > lightPlaneE.y || AABBe.x < lightPlaneB.x || AABBe.y < lightPlaneB.y) // AABB全部在lightPlane外部。
 	{
 		// 三角形被剔除。
 	}
@@ -132,7 +132,7 @@ int countTriBinPairNum()
 	thrust::exclusive_scan(dev_pairNum, dev_pairNum + m_triangleNum, dev_pairNumPrefixsum);
 	cudaDeviceSynchronize();
 
-	//showPairNumPerTri();
+	showPairNumPerTri();
 
 	// load to host;
 	int pairNumALL;
@@ -215,7 +215,7 @@ void bindTriToBin(int pairNum)
 	}
 	cudaDeviceSynchronize();
 
-	//showBinTriPair(pairNum);
+	showBinTriPair(pairNum);
 
 	// sort pair
 	thrust::device_ptr<int> dev_tri((int*)binTriPairTriBuffer.devPtr);
