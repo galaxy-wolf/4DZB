@@ -18,8 +18,8 @@ __global__ void isBinValid_kernle()
 	const int binX = blockIdx.x * blockDim.x + threadIdx.x;
 	const int binY = blockIdx.y * blockDim.y + threadIdx.y;
 
-	if ( binX >= binWidth || binY >= binHeight)
-		return; 
+	if (binX >= binWidth || binY >= binHeight)
+		return;
 
 	const int binID = binY << binWidthLog2 | binX;
 
@@ -88,10 +88,10 @@ void prepareBin(int & sampleNumPerBlock, int & sharedMemPerBlockSizeByte, int & 
 	thrust::device_ptr<int> dev_isValidBinPrefixSum((int *)isBinValidPrefixSumBuffer.devPtr);
 	thrust::inclusive_scan(dev_isValidBin, dev_isValidBin + binNum, dev_isValidBinPrefixSum);
 
-	writeValidBin_kernel<<<grid, block>>>();
+	writeValidBin_kernel << <grid, block >> >();
 
-	checkCudaErrors(cudaMemcpy(&m_validBinNum, ((int *)isBinValidPrefixSumBuffer.devPtr) + binNum-1, sizeof(int), cudaMemcpyDeviceToHost));
-	
+	checkCudaErrors(cudaMemcpy(&m_validBinNum, ((int *)isBinValidPrefixSumBuffer.devPtr) + binNum - 1, sizeof(int), cudaMemcpyDeviceToHost));
+
 	my_debug(MY_DEBUG_SECTION_SHADOW_CAL, 1)("valid bin num is %d\n", m_validBinNum);
 
 	//////////////////////////////////////////////////////
@@ -111,13 +111,13 @@ void prepareBin(int & sampleNumPerBlock, int & sharedMemPerBlockSizeByte, int & 
 	const int lightResWidth = h_fdStaticParams.light.lightResWidth;
 	const int lightResHeight = h_fdStaticParams.light.lightResHeight;
 	const int manageSizeU32 = 12; // constant shared memory 48 Bytes，
-	
+
 	int sampleSizeU32;
 	if (lightResWidth <= 32)// use U32
 	{
 		sampleSizeU32 = (lightResHeight + 1) * 1 + 9; // 9 是存放在share memory 中的sample pos 等数据的大小。
 	}
-	else{ // use U64;
+	else { // use U64;
 		sampleSizeU32 = (lightResHeight + 1) * 2 + 9;
 	}
 

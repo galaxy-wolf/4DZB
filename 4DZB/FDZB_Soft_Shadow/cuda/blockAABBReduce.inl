@@ -67,30 +67,30 @@ __device__ __forceinline void block_reduce(T* const odata, T mySum)
 	sdata[threadIdx.x] = mySum;
 	__syncthreads();
 	if (blockSize >= 1024) { if (threadIdx.x < 512) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 512]); } __syncthreads(); }
-	if (blockSize >= 512) { if (threadIdx.x < 256) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 256]);  } __syncthreads(); }
+	if (blockSize >= 512) { if (threadIdx.x < 256) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 256]); } __syncthreads(); }
 	if (blockSize >= 256) { if (threadIdx.x < 128) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 128]); } __syncthreads(); }
-	if (blockSize >= 128) { if (threadIdx.x <  64) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 64]);  } __syncthreads(); }
+	if (blockSize >= 128) { if (threadIdx.x <  64) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 64]); } __syncthreads(); }
 
 	if (threadIdx.x < 32)
 	{
-		if (blockSize >= 64) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 32]);  }
-		if (blockSize >= 32) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 16]);  }
+		if (blockSize >= 64) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 32]); }
+		if (blockSize >= 32) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 16]); }
 		if (blockSize >= 16) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 8]); }
 		if (blockSize >= 8) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 4]); }
-		if (blockSize >= 4) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 2]);  }
-		if (blockSize >= 2) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 1]);  }
+		if (blockSize >= 4) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 2]); }
+		if (blockSize >= 2) { sdata[threadIdx.x] = mySum = op(mySum, sdata[threadIdx.x + 1]); }
 	}
 
 	if (threadIdx.x == 0)
 		*odata = sdata[0];
-	__syncthreads(); 
+	__syncthreads();
 }
 
 /**********************************************
 
 n 表示aabb的个数
 **********************************************/
-enum REDUCE_TYPE{ reduceMaxMinOnly, reduceXYsumOnly, reduceBoth, INVALID };
+enum REDUCE_TYPE { reduceMaxMinOnly, reduceXYsumOnly, reduceBoth, INVALID };
 template<REDUCE_TYPE reduceType>
 __global__ void AABBReduce_kernel(int n)
 {
@@ -103,8 +103,8 @@ __global__ void AABBReduce_kernel(int n)
 
 	uint pos = (blockIdx.x * blockDim.x + threadIdx.x);
 
-	if (pos < n){
-		
+	if (pos < n) {
+
 		if (reduceType == reduceMaxMinOnly || reduceType == reduceBoth)
 		{
 			myXmin = aabbTemp[(pos << 3) | 0x00];
@@ -141,8 +141,8 @@ __global__ void AABBReduce_kernel(int n)
 	}
 	if (reduceType == reduceBoth)
 	{
-		block_reduce<float, OperatorAdd<float>, REDUCE_BLOCK_SIZE> (&aabbTemp[(opos << 3) | 0x03], myXsum);
-		block_reduce<float, OperatorAdd<float>, REDUCE_BLOCK_SIZE> (&aabbTemp[(opos << 3) | 0x07], myYsum);
+		block_reduce<float, OperatorAdd<float>, REDUCE_BLOCK_SIZE>(&aabbTemp[(opos << 3) | 0x03], myXsum);
+		block_reduce<float, OperatorAdd<float>, REDUCE_BLOCK_SIZE>(&aabbTemp[(opos << 3) | 0x07], myYsum);
 	}
 
 	if (reduceType == reduceXYsumOnly)

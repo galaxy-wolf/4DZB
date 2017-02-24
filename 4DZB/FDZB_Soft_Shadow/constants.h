@@ -23,7 +23,7 @@ const int FD_MAX_AABB_REDUCE_TEMP_SIZE = 100 * 1024 * 1024 / 512;// 最多可以使用
 #define FD_BIN_LOG2				3 // binsize / tileSize.
 
 #define FD_BIN_TRI_SEG_LOG2			9		// 32-bit entries.   512 个线程
-//#define FD_TILE_SEG_LOG2		5		// 32-bit entries.
+																 //#define FD_TILE_SEG_LOG2		5		// 32-bit entries.
 #define FD_SAMPLE_TILE_SEG_LOG2 4  // 16个 sample 为1组
 
 
@@ -31,7 +31,7 @@ const int FD_MAX_AABB_REDUCE_TEMP_SIZE = 100 * 1024 * 1024 / 512;// 最多可以使用
 #define FD_COARSE_WARPS			32
 
 
-// GPU 相关：
+																 // GPU 相关：
 const int FD_MAX_WARPS_PER_SM = 64;
 const int FD_MAX_BLOCK_PER_SM = 32;
 const int FD_MIN_BLOCK_PER_SM = 2;
@@ -39,9 +39,9 @@ const int FD_SHARED_MEM_PER_SM = 96 * 1024; //bytes;
 
 
 
-//------------------------------------------------------------------------
-//generated;
-//------------------------------------------------------------------------
+											//------------------------------------------------------------------------
+											//generated;
+											//------------------------------------------------------------------------
 const int FD_MAX_LP_GRID_SIZE = (1 << FD_MAX_LP_GRID_SIZE_LOG2);
 
 

@@ -13,7 +13,7 @@ public:
 
 	RectAreaLight() :
 		m_pos(CG_MATH::vector3(0.0f, 5.0f, -5.0f)),
-		m_width(.1f), m_height(0.1f),
+		m_width(4.1f), m_height(4.1f),
 		m_Dir(0, -CG_MATH::kPiOver2, 0), 
 		m_La(0.2f), 
 		m_Ld(0.4f), 

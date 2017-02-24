@@ -28,14 +28,14 @@ __global__ void writeSampleAndBinPair()
 
 	if (x < viewportX && y < viewportY)
 	{
-		const float4 rectB = surf2DLayeredread<float4>(sampleRectangleSurf, x*sizeof(float4), y, 0, cudaBoundaryModeTrap);
-		const float4 rectE = surf2DLayeredread<float4>(sampleRectangleSurf, x*sizeof(float4), y, 1, cudaBoundaryModeTrap);
+		const float4 rectB = surf2DLayeredread<float4>(sampleRectangleSurf, x * sizeof(float4), y, 0, cudaBoundaryModeTrap);
+		const float4 rectE = surf2DLayeredread<float4>(sampleRectangleSurf, x * sizeof(float4), y, 1, cudaBoundaryModeTrap);
 
 		int result = INVALID_BIN;
 		if ((rectB.x > rectE.x || rectB.y > rectE.y) // 该像素点rectangle不存在，可能是像素是屏幕的背景。
 			|| (rectB.x < lightPlaneB.x || rectB.y <lightPlaneB.y || rectE.x > lightPlaneE.x || rectE.y > lightPlaneE.y) // 该矩形没有全部在light plane 中，说明没有三角形能遮挡该像素
-		//|| (rectB.x > lightPlaneE.x || rectE.x < lightPlaneB.x || rectB.y > lightPlaneE.y || rectE.y < lightPlaneB.y)
-		)
+																														 //|| (rectB.x > lightPlaneE.x || rectE.x < lightPlaneB.x || rectB.y > lightPlaneE.y || rectE.y < lightPlaneB.y)
+			)
 		{
 			// 此时阴影值为0， 不需要进一步计算；
 		}
@@ -46,7 +46,7 @@ __global__ void writeSampleAndBinPair()
 			mybin.x = floorf((center.x - lightPlaneB.x) * lightPlaneFactor.x);
 			mybin.y = floorf((center.y - lightPlaneB.y) * lightPlaneFactor.y);
 			result = mybin.y << binWidth_LOG2 | mybin.x;
-			
+
 			valid[y * viewportX + x] = 1;
 
 		}
@@ -87,11 +87,11 @@ __global__ void maxZpreBinReduce_kernel()
 		const int mySample = sample[i];
 		const int sampleX = mySample &((1 << viewportWidth_LOG2) - 1);
 		const int sampleY = mySample >> viewportWidth_LOG2;
-		float4 rect = surf2DLayeredread<float4>(sampleRectangleSurf, sampleX*sizeof(float4), sampleY, 0, cudaBoundaryModeTrap);
+		float4 rect = surf2DLayeredread<float4>(sampleRectangleSurf, sampleX * sizeof(float4), sampleY, 0, cudaBoundaryModeTrap);
 		myMaxZ = fmax(myMaxZ, rect.z);
 		myMinRange.x = fmax(myMinRange.x, rect.x);
 		myMinRange.y = fmax(myMinRange.y, rect.y);
-		rect = surf2DLayeredread<float4>(sampleRectangleSurf, sampleX*sizeof(float4), sampleY, 1, cudaBoundaryModeTrap);
+		rect = surf2DLayeredread<float4>(sampleRectangleSurf, sampleX * sizeof(float4), sampleY, 1, cudaBoundaryModeTrap);
 		myMinRange.z = fmin(myMinRange.z, rect.x);
 		myMinRange.w = fmin(myMinRange.w, rect.y);
 	}
@@ -132,7 +132,7 @@ void bindSampleToBin()
 	// find pair start;
 	findSampleStartEnd();
 	cudaDeviceSynchronize();
-//	getLastCudaError("find start end");
+	//	getLastCudaError("find start end");
 	// cal maxZ for per bin;
 	{
 		dim3 block(REDUCE_MAXZ_BLOCK_SIZE);
@@ -143,7 +143,7 @@ void bindSampleToBin()
 	my_debug(MY_DEBUG_SECTION_RASTER, 1)("bind sample to bin done!\n");
 
 #ifdef _DEBUG
-	saveBinImage((int *)binSampleStartBuffer.devPtr, (int *)binSampleEndBuffer.devPtr, (int *)binSamplePairSampleBuffer.devPtr, binSamplePairSampleBuffer.size_in_element, "binSample");
+	saveBinImage((int *)binSampleStartBuffer.devPtr, (int *)binSampleEndBuffer.devPtr, (int *)binSamplePairSampleBuffer.devPtr, binSamplePairSampleBuffer.size_in_element, "E:\\Results\\binSample");
 #endif// _DEBUG
 }
 

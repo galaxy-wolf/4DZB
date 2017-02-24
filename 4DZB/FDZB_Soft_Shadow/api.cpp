@@ -341,7 +341,7 @@ namespace FD{
 	
 
 #if REF_CAL
-		FILE *f = fopen("boxCDLight.txt", "w");
+		FILE *f = fopen("E:\\Results\\boxCDLight.txt", "w");
 		if (curLight.lightResHeight <= 32 && curLight.lightResWidth <= 32){ // for refcal;
 			int cnt = 0;
 			for (int i = 0; i < curLight.lightResHeight; i++)

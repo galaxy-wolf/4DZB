@@ -40,9 +40,9 @@ void findSampleStartEnd()
 	binSampleEndBuffer.clear(0);
 
 	dim3 block(FIND_START_END_BLOCK_SIZE, 1);
-	int pairNum = binSamplePairSampleBuffer.size_in_element; 
+	int pairNum = binSamplePairSampleBuffer.size_in_element;
 	dim3 grid(iDiviUp(pairNum, block.x));
-	FindStart_kernel << <grid, block >> >((int *)binSampleStartBuffer.devPtr, (int *)binSampleEndBuffer.devPtr, (int *)binSamplePairBinBuffer.devPtr, pairNum);	
+	FindStart_kernel << <grid, block >> >((int *)binSampleStartBuffer.devPtr, (int *)binSampleEndBuffer.devPtr, (int *)binSamplePairBinBuffer.devPtr, pairNum);
 }
 
 
@@ -55,7 +55,7 @@ void findTriangleStartEnd(int pairNum)
 	dim3 block(FIND_START_END_BLOCK_SIZE, 1);
 	dim3 grid(iDiviUp(pairNum, block.x));
 	FindStart_kernel << <grid, block >> >((int *)binTriStartBuffer.devPtr, (int *)binTriEndBuffer.devPtr, (int *)binTriPairBinBuffer.devPtr, pairNum);
-	
+
 }
 
 void saveBinImage(int * binStart, int * binEnd, int * id, int n, char* desc)
@@ -98,7 +98,7 @@ void saveBinImage(int * binStart, int * binEnd, int * id, int n, char* desc)
 	BYTE * buf = (BYTE *)malloc(binNum * sizeof(BYTE) * 3);
 
 	for (int i = 0; i < binNum; i++)
-	{	
+	{
 		if ((i & m_LP_GridSizeWidthBit) >= m_LP_GridSizeWidth)
 			continue;
 
@@ -141,20 +141,20 @@ void saveBinImage(int * binStart, int * binEnd, int * id, int n, char* desc)
 		for (int j = 0; j < m_LP_GridSizeWidth; j++)
 		{
 			int len = h_binEnd[i << m_LP_GridSizeWidthLog2 | j] - h_binStart[i << m_LP_GridSizeWidthLog2 | j];
-			
+
 			if (imax <= 1)
-				len = len*255;
-			else{
+				len = len * 255;
+			else {
 				if (len <= 0)
 					len = 0;
 				else
 					len = (int)((255 * log10(len) / log10(imax)));
 			}
 
-		//	if (len > 0)
-		//		fprintf(fTemp, "1");
-		//	else
-		//		fprintf(fTemp, "0");
+			//	if (len > 0)
+			//		fprintf(fTemp, "1");
+			//	else
+			//		fprintf(fTemp, "0");
 
 			buf[(i* m_LP_GridSizeWidth + j) * 3] = len;
 			buf[(i* m_LP_GridSizeWidth + j) * 3 + 1] = len;
@@ -166,7 +166,7 @@ void saveBinImage(int * binStart, int * binEnd, int * id, int n, char* desc)
 				fprintf(f, "%d ", h_id[pos]);
 			}
 			fprintf(f, "\n");
-			
+
 		}
 		//fprintf(fTemp, "\n");
 	}

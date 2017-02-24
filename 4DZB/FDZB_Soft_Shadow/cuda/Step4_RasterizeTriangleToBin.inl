@@ -229,7 +229,7 @@ void bindTriToBin(int pairNum)
 
 	my_debug(MY_DEBUG_SECTION_RASTER, 1)("bind tri to bin done!\n");
 #ifdef _DEBUG
-	saveBinImage((int *)binTriStartBuffer.devPtr, (int *)binTriEndBuffer.devPtr, (int *)binTriPairTriBuffer.devPtr, pairNum, "binTri");
+	saveBinImage((int *)binTriStartBuffer.devPtr, (int *)binTriEndBuffer.devPtr, (int *)binTriPairTriBuffer.devPtr, pairNum, "E:\\Results\\binTri");
 #endif
 }
 
@@ -241,7 +241,7 @@ void showBinTriPair(int pairNum)
 	checkCudaErrors(cudaMemcpy(h_tri, binTriPairTriBuffer.devPtr, pairNum * sizeof(int), cudaMemcpyDeviceToHost));
 	checkCudaErrors(cudaMemcpy(h_bin, binTriPairBinBuffer.devPtr, pairNum * sizeof(int), cudaMemcpyDeviceToHost));
 
-	FILE *f = fopen("binTriPairO.txt", "w+");
+	FILE *f = fopen("E:\\Results\\binTriPairO.txt", "w+");
 	for (int i = 0; i < pairNum; i++)
 		fprintf(f, "%d %d\n", h_tri[i], h_bin[i]);
 	fclose(f);
@@ -258,7 +258,7 @@ void showPairNumPerTri()
 	checkCudaErrors(cudaMemcpy(h_p, triPairNumBuffer.devPtr, sizeof(int)* m_triangleNum, cudaMemcpyDeviceToHost));
 	checkCudaErrors(cudaMemcpy(h_pp, triPairNumPrefixSumBuffer.devPtr, sizeof(int)* m_triangleNum, cudaMemcpyDeviceToHost));
 
-	FILE *f = fopen("triNum.txt", "w+");
+	FILE *f = fopen("E:\\Results\\triNum.txt", "w+");
 	for (int i = 0; i < m_triangleNum; i++)
 		fprintf(f, "%d %d\n", h_p[i], h_pp[i]);
 	fclose(f);

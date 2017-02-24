@@ -22,7 +22,7 @@
 DWORD WINAPI ShaderUpdateCheckThread(void *lpParameter);
 #endif
 
-#define LOG_NAME "shaderlog_glsl.txt"
+#define LOG_NAME "E:\\Results\\shaderlog_glsl.txt"
 
 
 int GLSLProgram::getUniformLocation(const char *name) const

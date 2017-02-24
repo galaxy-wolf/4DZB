@@ -48,7 +48,7 @@ int triangleMaxZcal(float &triangleMaxZ)
 __global__ void verticesRectangleAABBcal_kernel()
 {
 	// output;
-//	float4* const verticeRectangle = (float4*)c_fdStaticParams.verticesRectangleBuffer;
+	//	float4* const verticeRectangle = (float4*)c_fdStaticParams.verticesRectangleBuffer;
 	float * const aabbTemp = (float *)c_fdStaticParams.aabbTempBuffer;
 
 	// input;

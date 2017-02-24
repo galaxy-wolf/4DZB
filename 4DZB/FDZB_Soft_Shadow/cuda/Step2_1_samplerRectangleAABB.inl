@@ -39,13 +39,8 @@ int sampleMaxZcal(float & sampleMaxZ)
 	dim3 grid(iDiviUp(threadNum, block.x), 1, 1);
 	sampleMaxZcal_kernel << <grid, block >> >();
 	cudaThreadSynchronize();
-
-	getLastCudaError("sampleMaxZ cal");
-
 	thrust::device_ptr<float> dev_maxZ((float*)AABB3DReduceBuffer.devPtr);
 	sampleMaxZ = thrust::reduce(dev_maxZ, dev_maxZ + grid.x, -1.0f, thrust::maximum<float>());
-
-	getLastCudaError("sampleMaxZ reduce");
 
 	if (sampleMaxZ < 0.0f) // Ã»ÓÐÏñËØ
 		return 1;
@@ -100,9 +95,9 @@ __global__ void sampleRectangleAABBcal_kernel()
 			myXsum = rectangleFactor.x / rect.z - rectangleSubConstant.x;
 			myYsum = rectangleFactor.y / rect.z - rectangleSubConstant.y;
 		}
-		surf2DLayeredwrite(make_float4(myXmin, myYmin, myZmin, 1.0f), sampleRectangleSurf, sampleX*sizeof(float4), sampleY, 0, cudaBoundaryModeTrap);
-		surf2DLayeredwrite(make_float4(myXmax, myYmax, myZmax, 1.0f), sampleRectangleSurf, sampleX*sizeof(float4), sampleY, 1, cudaBoundaryModeTrap);
-		
+		surf2DLayeredwrite(make_float4(myXmin, myYmin, myZmin, 1.0f), sampleRectangleSurf, sampleX * sizeof(float4), sampleY, 0, cudaBoundaryModeTrap);
+		surf2DLayeredwrite(make_float4(myXmax, myYmax, myZmax, 1.0f), sampleRectangleSurf, sampleX * sizeof(float4), sampleY, 1, cudaBoundaryModeTrap);
+
 	}
 	// reduce AABB;
 	int opos = blockIdx.x;
@@ -114,13 +109,13 @@ __global__ void sampleRectangleAABBcal_kernel()
 	block_reduce<float, OperatorMax<float>, REDUCE_BLOCK_SIZE>(&aabbTemp[(opos << 3) | 0x05], myYmax);
 	block_reduce<float, OperatorMax<float>, REDUCE_BLOCK_SIZE>(&aabbTemp[(opos << 3) | 0x06], myZmax);
 	block_reduce<float, OperatorAdd<float>, REDUCE_BLOCK_SIZE>(&aabbTemp[(opos << 3) | 0x07], myYsum);
-					  
+
 }
 void saveAABBtemp(const char* des, int n);
 /*
-	Return: 
-	1: for no sample;
-	0: for ok;
+Return:
+1: for no sample;
+0: for ok;
 */
 int sampleRectangleAABBcal()
 {
@@ -131,9 +126,7 @@ int sampleRectangleAABBcal()
 	dim3 grid(iDiviUp(threadNum, block.x), 1, 1);
 	sampleRectangleAABBcal_kernel << <grid, block >> >();
 	cudaThreadSynchronize();
-	saveAABBtemp("sampleAABBtemp", grid.x);
-
-	getLastCudaError("sampleAABB cal");
+	saveAABBtemp("E:\\Results\\sampleAABBtemp", grid.x);
 
 	while (grid.x > 1)
 	{
@@ -143,10 +136,9 @@ int sampleRectangleAABBcal()
 		cudaThreadSynchronize();
 	}
 
-	getLastCudaError("sampleAABB reduce");
 
 	// load to host;
-	checkCudaErrors(cudaMemcpy((void *)&sampleRectangleAABB[0], AABB3DReduceBuffer.devPtr, sizeof(float)*8, cudaMemcpyDeviceToHost));
+	checkCudaErrors(cudaMemcpy((void *)&sampleRectangleAABB[0], AABB3DReduceBuffer.devPtr, sizeof(float) * 8, cudaMemcpyDeviceToHost));
 
 	my_debug(MY_DEBUG_SECTION_AABB, 1)("sample AABB is\n x: %f~%f\ny: %f~%f\nz: %f~%f\n", sampleRectangleAABB[0].x, sampleRectangleAABB[1].x,
 		sampleRectangleAABB[0].y, sampleRectangleAABB[1].y, sampleRectangleAABB[0].z, sampleRectangleAABB[1].z);
@@ -159,7 +151,7 @@ int sampleRectangleAABBcal()
 	int validNum = thrust::reduce(dev_valid, dev_valid + sampleNum);
 
 	// get avg;
-	if (validNum ==0)
+	if (validNum == 0)
 	{
 		return 1;
 	}
@@ -174,14 +166,14 @@ int sampleRectangleAABBcal()
 }
 void saveAABBtemp(const char* des, int n)
 {
-	char fileName[32];
+	char fileName[128];
 	sprintf(fileName, "%s.txt", des);
 	FILE * f = fopen(fileName, "w+");
-	
-	float * h = (float*)malloc(sizeof(float)*n *8);
+
+	float * h = (float*)malloc(sizeof(float)*n * 8);
 	if (!f || !h)
 		exit(0x1111);
-	checkCudaErrors(cudaMemcpy(h, AABB3DReduceBuffer.devPtr, sizeof(float)*n *8, cudaMemcpyDeviceToHost));
+	checkCudaErrors(cudaMemcpy(h, AABB3DReduceBuffer.devPtr, sizeof(float)*n * 8, cudaMemcpyDeviceToHost));
 
 	float myXmin = FD_F32_MAX, myXmax = -FD_F32_MAX;
 	float myYmin = FD_F32_MAX, myYmax = -FD_F32_MAX;
@@ -193,15 +185,15 @@ void saveAABBtemp(const char* des, int n)
 	for (int i = 0; i < n; i++)
 	{
 		fprintf(f, "%f %f %f %f %f %f %f %f\n", h[i << 3 | 0x00], h[i << 3 | 0x01], h[i << 3 | 0x02], h[i << 3 | 0x03], h[i << 3 | 0x04], h[i << 3 | 0x05], h[i << 3 | 0x06], h[i << 3 | 0x07]);
-		
-		myXmin = fmin(myXmin, h[i <<3 |0x00]);
+
+		myXmin = fmin(myXmin, h[i << 3 | 0x00]);
 		myYmin = fmin(myYmin, h[i << 3 | 0x01]);
 		myZmin = fmin(myZmin, h[i << 3 | 0x02]);
-		myXsum = (myXsum+ h[i << 3 | 0x03]);
-		myXmax= fmax(myXmax, h[i <<3 |0x04]);
-		myYmax= fmax(myYmax, h[i <<3 |0x05]);
-		myZmax= fmax(myZmax, h[i <<3 |0x06]);
-		myYsum= (myYsum+ h[i <<3 |0x07]);
+		myXsum = (myXsum + h[i << 3 | 0x03]);
+		myXmax = fmax(myXmax, h[i << 3 | 0x04]);
+		myYmax = fmax(myYmax, h[i << 3 | 0x05]);
+		myZmax = fmax(myZmax, h[i << 3 | 0x06]);
+		myYsum = (myYsum + h[i << 3 | 0x07]);
 	}
 	fprintf(f, "cpu result :\n%f %f %f %f %f %f %f %f \n", myXmin, myYmin, myZmin, myXsum, myXmax, myYmax, myZmax, myYsum);
 	fclose(f);

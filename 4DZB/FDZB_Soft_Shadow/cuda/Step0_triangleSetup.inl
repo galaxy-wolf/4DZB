@@ -2,7 +2,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/reduce.h>
 /**************************************
- setup triangle and computer AABB for each triangle
+setup triangle and computer AABB for each triangle
 ***************************************/
 //__device__ __forceinline__ void loadAndStoreVertex(int vid, int tid, int vid_in_tri, float4& triAABBmin, float4& triAABBmax)
 //{
@@ -84,7 +84,7 @@ __global__ void triangleVertexSetup_kernel()
 	if (tid < triNum)
 	{
 		int3 vid;
-		
+
 		float4 v0, v1, v2;
 		float4 triAABBmin = make_float4(FD_F32_MAX, FD_F32_MAX, FD_F32_MAX, 1.0f), triAABBmax = make_float4(-FD_F32_MAX, -FD_F32_MAX, -FD_F32_MAX, 1.0f);
 
@@ -114,7 +114,7 @@ __global__ void triangleVertexSetup_kernel()
 		{
 			// back face culling;
 		}
-		else{
+		else {
 			getTriAABB(v0, triAABBmin, triAABBmax);
 			getTriAABB(v1, triAABBmin, triAABBmax);
 			getTriAABB(v2, triAABBmin, triAABBmax);
@@ -122,7 +122,7 @@ __global__ void triangleVertexSetup_kernel()
 			if (triAABBmin.x > lightPlaneE.x || triAABBmin.y > lightPlaneE.y || triAABBmax.x < lightPlaneB.x || triAABBmax.y < lightPlaneB.y)// AABB全部在lightPlane外部。
 			{
 			}
-			else{
+			else {
 				// write triData;
 				TriangleData triData;
 				triData.v0 = make_float3(v0);
@@ -132,7 +132,7 @@ __global__ void triangleVertexSetup_kernel()
 				triData.maxz = triAABBmax.z;
 				triData.aabb2Dmax = make_float2(triAABBmax);
 				triData.aabb2Dmin = make_float2(triAABBmin);
-				triDataBuffer[tid] = triData;	
+				triDataBuffer[tid] = triData;
 
 				float2 triB, triE;
 				triB.x = fmaxf(triAABBmin.x, lightPlaneB.x);
@@ -182,12 +182,12 @@ __global__ void triangleVertexSetup_kernel()
 		//	myYsum = triE.y - triB.y;
 		//	validTempBuffer[tid] = 1;
 		//}
-		
+
 	}
 	int opos = blockIdx.x;
 	block_reduce<float, OperatorAdd<float>, REDUCE_BLOCK_SIZE>(&aabbTemp[(opos << 1) | 0x00], myXsum);
 	block_reduce<float, OperatorAdd<float>, REDUCE_BLOCK_SIZE>(&aabbTemp[(opos << 1) | 0x01], myYsum);
-	
+
 }
 
 // Return : 
