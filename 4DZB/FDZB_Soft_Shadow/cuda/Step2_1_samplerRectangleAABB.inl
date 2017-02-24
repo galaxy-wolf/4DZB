@@ -94,6 +94,11 @@ __global__ void sampleRectangleAABBcal_kernel()
 
 			myXsum = rectangleFactor.x / rect.z - rectangleSubConstant.x;
 			myYsum = rectangleFactor.y / rect.z - rectangleSubConstant.y;
+			
+			//if (myXmax < myXmin || myYmax < myYmin) {
+			//	myXsum = 1;
+			//	myYsum = 1;
+			//}
 		}
 		surf2DLayeredwrite(make_float4(myXmin, myYmin, myZmin, 1.0f), sampleRectangleSurf, sampleX * sizeof(float4), sampleY, 0, cudaBoundaryModeTrap);
 		surf2DLayeredwrite(make_float4(myXmax, myYmax, myZmax, 1.0f), sampleRectangleSurf, sampleX * sizeof(float4), sampleY, 1, cudaBoundaryModeTrap);
@@ -156,6 +161,7 @@ int sampleRectangleAABBcal()
 		return 1;
 	}
 
+	//printf("%d valid sample rectangle, agv is x: %f y %f\n", validNum, sampleRectangleAABB[0].w, sampleRectangleAABB[1].w);
 
 	sampleRectangleAABB[0].w /= validNum;
 	sampleRectangleAABB[1].w /= validNum;
@@ -166,6 +172,10 @@ int sampleRectangleAABBcal()
 }
 void saveAABBtemp(const char* des, int n)
 {
+#ifndef _DEBUG
+	return;
+#endif
+
 	char fileName[128];
 	sprintf(fileName, "%s.txt", des);
 	FILE * f = fopen(fileName, "w+");

@@ -251,6 +251,10 @@ void showBinTriPair(int pairNum)
 
 void showPairNumPerTri()
 {
+#ifndef _DEBUG
+	return;
+#endif
+
 	printf("trinum \n");
 	int * h_p = (int *)malloc(m_triangleNum * sizeof(int));
 	int * h_pp = (int*)malloc(m_triangleNum * sizeof(int));

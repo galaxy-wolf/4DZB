@@ -32,8 +32,8 @@ __global__ void writeSampleAndBinPair()
 		const float4 rectE = surf2DLayeredread<float4>(sampleRectangleSurf, x * sizeof(float4), y, 1, cudaBoundaryModeTrap);
 
 		int result = INVALID_BIN;
-		if ((rectB.x > rectE.x || rectB.y > rectE.y) // 该像素点rectangle不存在，可能是像素是屏幕的背景。
-			|| (rectB.x < lightPlaneB.x || rectB.y <lightPlaneB.y || rectE.x > lightPlaneE.x || rectE.y > lightPlaneE.y) // 该矩形没有全部在light plane 中，说明没有三角形能遮挡该像素
+		if ((rectB.x > rectE.x || rectB.y > rectE.y) ||// 该像素点rectangle不存在，可能是像素是屏幕的背景。
+			 (rectB.x < lightPlaneB.x || rectB.y <lightPlaneB.y || rectE.x > lightPlaneE.x || rectE.y > lightPlaneE.y) // 该矩形没有全部在light plane 中，说明没有三角形能遮挡该像素
 																														 //|| (rectB.x > lightPlaneE.x || rectE.x < lightPlaneB.x || rectB.y > lightPlaneE.y || rectE.y < lightPlaneB.y)
 			)
 		{

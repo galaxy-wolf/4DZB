@@ -32,7 +32,7 @@ private:
 	Controller() :m_lastX(0), m_lastY(0), m_enableMouseMove(false) 
 	{
 		m_camera.pos.y = 2.0f;
-		m_camera.dir.pitch = -kPiOver2 / 8.0f;
+		m_camera.dir.pitch = -kPiOver2 / 2.0f;
 	}
 	~Controller()=default;
 

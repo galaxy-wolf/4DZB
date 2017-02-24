@@ -78,9 +78,9 @@ void init() {
 	MeshManager& meshM = MeshManager::getInstance();
 	const string ResDir = "./Resources/";
 	meshM.addMesh(ResDir + "plane.obj");
-	//meshM.addMesh(ResDir + "dragon_1.obj");
+	meshM.addMesh(ResDir + "dragon_1.obj");
 	//meshM.addMesh(ResDir + "box.obj");
-	meshM.addMesh(ResDir + "triangle.obj");
+	//meshM.addMesh(ResDir + "triangle.obj");
 
 	meshM.createGPUbufferForCUDA();
 

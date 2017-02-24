@@ -19,7 +19,7 @@ bool lightPlaneParamCal()
 	if (triangleMaxZcal(triangleMaxZ))
 		return 1;
 
-	float f = fmax(sampleMaxZ, triangleMaxZ);
+	float f = fmax(sampleMaxZ, triangleMaxZ) + 0.1f;
 
 	h_fdRectangleSubConstant.x /= f;
 	h_fdRectangleSubConstant.y /= f;
@@ -50,6 +50,12 @@ bool lightPlaneParamCal()
 	h_fdLightPlaneParams.begin.y = fmax(sampleRectangleAABB[0].y, modelRectangleAABB[0].y);
 	h_fdLightPlaneParams.end.x = fmin(sampleRectangleAABB[1].x, modelRectangleAABB[1].x);
 	h_fdLightPlaneParams.end.y = fmin(sampleRectangleAABB[1].y, modelRectangleAABB[1].y);
+
+
+	//h_fdLightPlaneParams.begin.x = sampleRectangleAABB[0].x;
+	//h_fdLightPlaneParams.begin.y = sampleRectangleAABB[0].y;
+	//h_fdLightPlaneParams.end.x = sampleRectangleAABB[1].x;
+	//h_fdLightPlaneParams.end.y = sampleRectangleAABB[1].y;
 
 	h_fdLightPlaneParams.begin.z = modelRectangleAABB[0].z;
 	h_fdLightPlaneParams.end.z = sampleRectangleAABB[1].z;
