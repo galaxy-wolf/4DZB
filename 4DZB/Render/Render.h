@@ -13,6 +13,8 @@
 #include "..\util\Color.h"
 
 #include "..\CG_MATH\EulerAngles.h"
+#include <glm\glm.hpp>
+
 
 // 单例模式
 class Render
@@ -48,11 +50,16 @@ public:
 	vector3 m_lightPos;
 	float m_lightWidth;
 	float m_lightHeight;
+	unsigned int m_lightSampleWidth;
+	unsigned int m_lightSampleHeight;
 	Color3f m_lightLa;
 	Color3f m_lightLd;
 	Color3f m_lightLs;
 	EulerAngles m_lightDir;
 	vector3 m_lightCorner0, m_lightCorner1, m_lightCorner2, m_lightCorner3;
+
+	glm::vec4 m_lightSamplePos[64][64];
+	GLuint m_lightSamplePosTex;
 
 	//Matrix4x4 m_inertiaToLightMatrix;
 
@@ -74,18 +81,21 @@ private:
 		const char* texNameInShader, const char* texPath);
 
 
-	void resize(int width, int height);
+	void resize(const GLuint width, const GLuint height);
 
 	// 私有数据
 
 
 	GLSLShaderManager * m_shaderManager;
 	FramebufferObject * m_FBO;
+	
+	// defered shading G-buffer
+	GLuint m_gBuffer0, m_gBuffer1, m_gBuffer2, m_gBuffer3;
+	GLuint m_DepthTex;
 
-	GLuint m_worldPositionTex, m_colorTex, m_normalTex, m_DepthTex;
 	GLuint m_shadowMapPBO, m_shadowMapTex;
 
-	enum shaderID{Phone=0, DEFER};
+	enum shaderID{GATHER_DATA=0, PHONE_SHADING};
 
 	const char* m_shaderDir = "./Resources/shader/";
 

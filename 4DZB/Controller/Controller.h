@@ -37,6 +37,11 @@ private:
 	~Controller()=default;
 
 
+	void SaveParam();
+	void LoadParam();
+	void SaveScreenShot();
+
+
 	// Ë½ÓÐÊý¾Ý
 	int m_lastX;
 	int m_lastY;

@@ -14,16 +14,20 @@ public:
 	RectAreaLight() :
 		m_pos(CG_MATH::vector3(0.0f, 5.0f, -5.0f)),
 		m_width(0.1f), m_height(0.1f),
+		m_sampleWidth(2), m_sampleHeight(2),
 		m_Dir(0, -CG_MATH::kPiOver2, 0), 
-		m_La(0.2f), 
-		m_Ld(0.4f), 
-		m_Ls(0.3f)
+		m_La(0.02f, 0.2f, 0.0f), 
+		m_Ld(0.04f, 0.4f, 0.0f),
+		m_Ls(0.03f, 0.3f, 0.0f)
 	{}
 	
 	// 公共数据
 	float  m_width;	//half width
 	float  m_height;	//half height
-	
+	 
+	unsigned int m_sampleWidth;
+	unsigned int m_sampleHeight;
+
 	CG_MATH::vector3 m_pos;	//light position
 	CG_MATH::EulerAngles m_Dir; // light Dir
 

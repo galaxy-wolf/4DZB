@@ -22,6 +22,12 @@ GLuint create2DColorTexture() {
 	return tex;
 }
 
+void resize2DColorTexture(GLuint tex, GLuint width, GLuint height)
+{
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 GLuint create2DDepthTexture() {
 
@@ -42,6 +48,13 @@ GLuint create2DDepthTexture() {
 	return tex;
 }
 
+void resize2DDepthTexture(GLuint tex, GLuint width, GLuint height)
+{
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8_EXT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 GLuint create2DShadowMapTex() {
 
 	GLuint tex;
@@ -59,27 +72,26 @@ GLuint create2DShadowMapTex() {
 	return tex;
 }
 
-void Render::resize(int width, int height)
+void resize2DShadowMapTex(GLuint tex, GLuint width, GLuint height)
+{
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE32F_ARB, width, height, 0, GL_LUMINANCE, GL_FLOAT, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Render::resize(const GLuint width, const GLuint height)
 {
 	m_wndWidth = width;
 	m_wndHeight = height;
 
-	glBindTexture(GL_TEXTURE_2D, m_worldPositionTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+	resize2DColorTexture(m_gBuffer0, width, height);
+	resize2DColorTexture(m_gBuffer1, width, height);
+	resize2DColorTexture(m_gBuffer2, width, height);
+	resize2DColorTexture(m_gBuffer3, width, height);
 
-	glBindTexture(GL_TEXTURE_2D, m_colorTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+	resize2DDepthTexture(m_DepthTex, width, height);
 
-	glBindTexture(GL_TEXTURE_2D, m_normalTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-
-	glBindTexture(GL_TEXTURE_2D, m_DepthTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8_EXT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
-
-	glBindTexture(GL_TEXTURE_2D, m_shadowMapTex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE32F_ARB, width, height, 0, GL_LUMINANCE, GL_FLOAT, NULL);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
+	resize2DShadowMapTex(m_shadowMapTex, width, height);
 
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_shadowMapPBO);
 	glBufferData(GL_PIXEL_UNPACK_BUFFER, width*height*sizeof(float), 0, GL_STREAM_DRAW);
@@ -102,7 +114,9 @@ Render::Render()
 	m_lightCorner0(0, 0, 0),
 	m_lightCorner1(0, 0, 0),
 	m_lightCorner2(0, 0, 0),
-	m_lightCorner3(0, 0, 0)
+	m_lightCorner3(0, 0, 0),
+	m_lightSampleWidth(0),
+	m_lightSampleHeight(0)
 {
 
 	//
@@ -111,8 +125,8 @@ Render::Render()
 	//m_inertiaToLightMatrix.identity();
 
 	m_lightWidth = m_lightHeight = 0;
-
-
+	m_lightSamplePosTex = create2DColorTexture();
+	resize2DColorTexture(m_lightSamplePosTex, 64, 64);
 
 	// init Shader;
 	m_shaderManager = new GLSLShaderManager(m_shaderDir);
@@ -123,27 +137,26 @@ Render::Render()
 	}
 
 	// 根据enum 的值决定load 顺序， 不能随意改变。
-	m_shaderManager->loadProgram("Phone", 0, 0, 0, "Phone");
-	m_shaderManager->loadProgram("defer", 0, 0, 0, "defer");
-	//m_shaderManager->loadProgram("Light", 0, 0, 0, "Light");
-	//m_shaderManager->loadProgram("PointSprites", 0, 0, 0, "PointSprites"); 
-
+	m_shaderManager->loadProgram("gatherData", 0, 0, 0, "gatherData");
+	m_shaderManager->loadProgram("phoneShading", 0, 0, 0, "phoneShading");
 
 
 	// init FBO
 
 	m_FBO = new FramebufferObject();
 
-	m_worldPositionTex = create2DColorTexture();
-	m_colorTex = create2DColorTexture();
-	m_normalTex = create2DColorTexture();
+	m_gBuffer0 = create2DColorTexture();
+	m_gBuffer1 = create2DColorTexture();
+	m_gBuffer2 = create2DColorTexture();
+	m_gBuffer3 = create2DColorTexture();
 
 	m_DepthTex = create2DDepthTexture();
 
 	m_FBO->Bind();
-	m_FBO->AttachTexture(GL_TEXTURE_2D, m_worldPositionTex, GL_COLOR_ATTACHMENT0);
-	m_FBO->AttachTexture(GL_TEXTURE_2D, m_colorTex, GL_COLOR_ATTACHMENT1);
-	m_FBO->AttachTexture(GL_TEXTURE_2D, m_normalTex, GL_COLOR_ATTACHMENT2);
+	m_FBO->AttachTexture(GL_TEXTURE_2D, m_gBuffer0, GL_COLOR_ATTACHMENT0);
+	m_FBO->AttachTexture(GL_TEXTURE_2D, m_gBuffer1, GL_COLOR_ATTACHMENT1);
+	m_FBO->AttachTexture(GL_TEXTURE_2D, m_gBuffer2, GL_COLOR_ATTACHMENT2);
+	m_FBO->AttachTexture(GL_TEXTURE_2D, m_gBuffer3, GL_COLOR_ATTACHMENT3);
 	m_FBO->AttachTexture(GL_TEXTURE_2D, m_DepthTex, GL_DEPTH_ATTACHMENT);
 
 	if (!m_FBO->IsValid()) {
@@ -168,13 +181,12 @@ Render::Render()
 	FD::FDsetSceneParams(1 << 21, 1 << 21);
 	FD::FDsetScenesEsp(1e-3);
 
-	FD::FDsetSampleGLTex(m_worldPositionTex, m_normalTex);
+	FD::FDsetSampleGLTex(m_gBuffer0, m_gBuffer1);
 	FD::FDsetOutputGLBuffer(m_shadowMapPBO);
 	
 	resize(m_wndWidth, m_wndHeight);
 
 	
-	// init screen width, height
 	CHECK_ERRORS();
 }
 
@@ -254,7 +266,7 @@ void Render::DrawRectLight()
 
 void Render::DrawModel()
 {
-	glUseProgram(m_shaderManager->program[Phone].handle);
+	glUseProgram(m_shaderManager->program[GATHER_DATA].handle);
 
 	MeshManager & meshM = MeshManager::getInstance();
 
@@ -263,29 +275,15 @@ void Render::DrawModel()
 
 	CHECK_ERRORS();
 	glUniformMatrix4fv(
-		m_shaderManager->program[Phone].getUniformLocation("ViewAndPerspectiveMatrix"),
+		m_shaderManager->program[GATHER_DATA].getUniformLocation("ViewAndPerspectiveMatrix"),
 		1, 
 		GL_TRUE, 
 		&vp.m11
 	);
 
-	// 设置光照计算相关参数
-
-	glUniform3f(
-		m_shaderManager->program[Phone].getUniformLocation("cameraPos"),
-		m_cameraPos.x,
-		m_cameraPos.y,
-		m_cameraPos.z);
-
-	glUniform3f(m_shaderManager->program[Phone].getUniformLocation("Light.Position"), m_lightPos.x, m_lightPos.y, m_lightPos.z);
-	glUniform3f(m_shaderManager->program[Phone].getUniformLocation("Light.La"), m_lightLa.r, m_lightLa.g, m_lightLa.b);
-	glUniform3f(m_shaderManager->program[Phone].getUniformLocation("Light.Ld"), m_lightLd.r, m_lightLd.g, m_lightLd.b);
-	glUniform3f(m_shaderManager->program[Phone].getUniformLocation("Light.Ls"), m_lightLs.r, m_lightLs.g, m_lightLs.b);
-
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-
 
 	// for each mesh;
 	for (int i = 0; i < meshM.m_meshes.size(); ++i) {
@@ -294,7 +292,7 @@ void Render::DrawModel()
 		
 		// 设置model 矩阵
 
-		glUniformMatrix4fv(m_shaderManager->program[Phone].getUniformLocation("modelMatrix"),
+		glUniformMatrix4fv(m_shaderManager->program[GATHER_DATA].getUniformLocation("modelMatrix"),
 			1,
 			GL_FALSE, 
 			&(static_cast<ColumnsMajorMatrix4x4>(mesh.m_ObjectToWorldMatrix)).m[0][0]
@@ -328,7 +326,7 @@ void Render::DrawModel()
 		for (int j = 0; j < mesh.m_groupIndices.size(); ++j) {
 			
 			// 绑定纹理
-			BindMaterial(Phone, mesh.m_materials[mesh.m_groupMaterialID[j]]);
+			BindMaterial(GATHER_DATA, mesh.m_materials[mesh.m_groupMaterialID[j]]);
 			
 
 			// 绑定IBO 
@@ -416,8 +414,8 @@ void Render::pass0()
 #else // defer shading
 
 	m_FBO->Bind();
-	static const GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-	glDrawBuffers(3, drawBuffers);
+	static const GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+	glDrawBuffers(4, drawBuffers);
 	glViewport(0, 0, m_wndWidth, m_wndHeight);
 
 	glEnable(GL_DEPTH_TEST);
@@ -438,7 +436,8 @@ void Render::pass1()
 	// 计算光源参数
 
 	AreaLightDes lightDes;
-	lightDes.lightResWidth = lightDes.lightResHeight = 2;
+	lightDes.lightResWidth = m_lightSampleWidth;
+	lightDes.lightResHeight = m_lightSampleHeight;
 
 	lightDes.position = glm::vec3(m_lightPos.x, m_lightPos.y, m_lightPos.z);
 	lightDes.rightRadius = m_lightWidth / 2.0f;
@@ -454,6 +453,22 @@ void Render::pass1()
 	m_lightCorner1 = m_lightPos - x + y;
 	m_lightCorner2 = m_lightPos - x - y;
 	m_lightCorner3 = m_lightPos + x - y;
+
+	x /= lightDes.rightRadius;
+	y /= lightDes.topRadius;
+
+	for (int i=0; i < m_lightSampleHeight; ++i)
+		for (int j = 0; j < m_lightSampleWidth; ++j)
+		{
+			vector3 pos = m_lightCorner2;// +x*i + y*j;
+			glm::vec4 &p = m_lightSamplePos[i][j];
+			p.x = pos.x;
+			p.y = pos.y; 
+			p.z = pos.z;
+		}
+	glBindTexture(GL_TEXTURE_2D, m_lightSamplePosTex);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F_ARB, 64, 64, 0, GL_RGBA, GL_FLOAT, &m_lightSamplePos[0][0].x);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	FD::FDsetAreaLight(lightDes);
 
@@ -501,18 +516,47 @@ void Render::pass2()
 
 
 	// defer shading
-	glUseProgram(m_shaderManager->program[DEFER].handle);
+	glUseProgram(m_shaderManager->program[PHONE_SHADING].handle);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_shadowMapTex);
-	glUniform1i(m_shaderManager->program[DEFER].getUniformLocation("shadowMap"), 0);
+	glBindTexture(GL_TEXTURE_2D, m_gBuffer0);
+	glUniform1i(m_shaderManager->program[PHONE_SHADING].getUniformLocation("G_Buffer0"), 0);
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, m_colorTex);
-	glUniform1i(m_shaderManager->program[DEFER].getUniformLocation("diffuseAndSpecTex"), 1);
+	glBindTexture(GL_TEXTURE_2D, m_gBuffer1);
+	glUniform1i(m_shaderManager->program[PHONE_SHADING].getUniformLocation("G_Buffer1"), 1);
 
 	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, m_normalTex);
-	glUniform1i(m_shaderManager->program[DEFER].getUniformLocation("ambientColorTex"), 2);
+	glBindTexture(GL_TEXTURE_2D, m_gBuffer2);
+	glUniform1i(m_shaderManager->program[PHONE_SHADING].getUniformLocation("G_Buffer2"), 2);
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_2D, m_gBuffer3);
+	glUniform1i(m_shaderManager->program[PHONE_SHADING].getUniformLocation("G_Buffer3"), 3);
+
+	glActiveTexture(GL_TEXTURE4);
+	glBindTexture(GL_TEXTURE_2D, m_shadowMapTex);
+	glUniform1i(m_shaderManager->program[PHONE_SHADING].getUniformLocation("shadowMap"), 4);
+
+	glUniform3f(
+		m_shaderManager->program[PHONE_SHADING].getUniformLocation("cameraPos"),
+		m_cameraPos.x,
+		m_cameraPos.y,
+		m_cameraPos.z);
+
+	//glUniform3f(m_shaderManager->program[PHONE_SHADING].getUniformLocation("Light.Position"), m_lightPos.x, m_lightPos.y, m_lightPos.z);
+	glUniform2ui(m_shaderManager->program[PHONE_SHADING].getUniformLocation("LightSampleSize"), m_lightSampleWidth, m_lightSampleHeight);
+	
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, m_lightSamplePosTex);
+
+
+	
+
+	glUniform1i(m_shaderManager->program[PHONE_SHADING].getUniformLocation("LightSamplePos"), 5);
+
+	glUniform3f(m_shaderManager->program[PHONE_SHADING].getUniformLocation("Light.La"), m_lightLa.r, m_lightLa.g, m_lightLa.b);
+	glUniform3f(m_shaderManager->program[PHONE_SHADING].getUniformLocation("Light.Ld"), m_lightLd.r, m_lightLd.g, m_lightLd.b);
+	glUniform3f(m_shaderManager->program[PHONE_SHADING].getUniformLocation("Light.Ls"), m_lightLs.r, m_lightLs.g, m_lightLs.b);
 
 	glBegin(GL_QUADS);
 	glVertex3f(-1.0f, 1.0f, 0.0f);;
@@ -537,5 +581,7 @@ void Render::pass2()
 	glLoadMatrixf(&(static_cast<ColumnsMajorMatrix4x4>(m_viewMatrix)).m[0][0]);
 
 	DrawRectLight();
+#ifdef _DEBUG
 	DrawAxis();
+#endif
 }

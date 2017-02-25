@@ -106,6 +106,8 @@ void Display() {
 	render.m_lightPos = controller.m_light.m_pos;
 	render.m_lightWidth = controller.m_light.m_width;
 	render.m_lightHeight = controller.m_light.m_height;
+	render.m_lightSampleWidth = controller.m_light.m_sampleWidth;
+	render.m_lightSampleHeight = controller.m_light.m_sampleHeight;
 	render.m_lightLa = controller.m_light.m_La;
 	render.m_lightLd = controller.m_light.m_Ld;
 	render.m_lightLs = controller.m_light.m_Ls;

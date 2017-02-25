@@ -1,0 +1,47 @@
+#version 440
+in vec3 worldPos;
+in vec3 worldN;
+in vec2 uv;
+
+layout (location = 0) out vec4 G_Buffer0;
+layout (location = 1) out vec4 G_Buffer1;
+layout (location = 2) out vec4 G_Buffer2;
+layout (location = 3) out vec4 G_Buffer3;
+
+struct MaterialInfo{
+	vec3 Ka;
+    sampler2D ambientTex;
+	vec3 Kd;
+    sampler2D diffuseTex;
+	vec3 Ks;
+    sampler2D specTex;
+	float Shininess;
+};
+
+uniform MaterialInfo Material;
+void main()
+{
+
+    vec3 ka = Material.Ka;
+    if (isnan(ka .x))
+    {
+        ka = texture(Material.ambientTex, uv).rgb;
+    }
+    vec3 kd = Material.Kd;
+    if (isnan(kd.x))
+    {
+        kd = texture(Material.diffuseTex, uv).rgb;
+    }
+    vec3 ks = Material.Ks;
+    if (isnan(ks.x)){
+        ks = texture(Material.specTex, uv).rgb;
+    }
+
+    // 打包输出到 0~3号 gbuffer中
+    G_Buffer0 = vec4(worldPos, ks.r);
+    G_Buffer1 = vec4(worldN, ks.g);
+    G_Buffer2 = vec4(ka, ks.b);
+    G_Buffer3 = vec4(kd, Material.Shininess);
+
+
+}
