@@ -61,6 +61,8 @@ struct __align__(32) SampleData
 	float2 aabb2Dmax;
 };
 
+
+
 struct AreaLight
 {
 	// basic variables

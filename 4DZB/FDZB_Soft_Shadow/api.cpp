@@ -395,6 +395,7 @@ namespace FD{
 	// 开始阴影计算
 	float FDLaunch()
 	{
+
 		cudaEvent_t start;
 		cudaEvent_t stop;
 		cudaEventCreate(&start);
@@ -484,9 +485,11 @@ namespace FD{
 		//1, 求出模型AABB 的包围盒 和 sample rectangle 的包围盒，从而得到light plane 的参数。
 		//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		
+		getLastCudaError("222");
 		if (!lightPlaneParamCal()) // 如果为true 表示没有影子。
 		{
+			
+			getLastCudaError("222");
 			//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 			//2,  setup  triangle 
 			//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -501,9 +504,14 @@ namespace FD{
 			//    将triangle 分配到对应的bin 中去
 			//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 			
+			getLastCudaError("222");
 			bindSampleToBin();
 		
+			getLastCudaError("222");
+
 			m_validBT_PairNum = countTriBinPairNum();
+
+			getLastCudaError("222");
 
 			if (m_validBT_PairNum > 0)
 			{
@@ -514,7 +522,11 @@ namespace FD{
 				//	setDynamicParams();
 				//}
 
+				getLastCudaError("222");
+				
 				bindTriToBin(m_validBT_PairNum);
+
+				getLastCudaError("222");
 
 				//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 							//4, 对于每个bin 开辟一个block的threads， 求解bin 中sample 的阴影值。
@@ -527,9 +539,16 @@ namespace FD{
 #if REF_CAL
 				refCal();
 #else
-				shadowCal();
-#endif
 				
+				
+				//shadowCal();
+				
+				shadowCal_perSample();
+
+				getLastCudaError("222");
+				//f = !f;
+#endif
+			
 			}
 		}
 
@@ -542,7 +561,6 @@ namespace FD{
 			FDresult.unmap();
 			for (int i = 0; i < FDscene.size(); i++)
 				FDscene[i].unmap();
-			
 		}
 		getLastCudaError("333");
 		

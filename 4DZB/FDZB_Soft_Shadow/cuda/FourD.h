@@ -150,4 +150,5 @@ void bindTriToBin(int pairNum);
 void shadowCal();
 void setBankSize();
 void refCal();
+void shadowCal_perSample();
 #endif// __FOURD_CUH__

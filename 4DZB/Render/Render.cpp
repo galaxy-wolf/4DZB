@@ -177,7 +177,7 @@ Render::Render()
 
 	// init FDZB soft shadow
 	FD::FDinit();
-	FD::FDsetBackfaceCull(false);
+	FD::FDsetBackfaceCull(true);
 	FD::FDsetSceneParams(1 << 21, 1 << 21);
 	FD::FDsetScenesEsp(1e-3);
 
@@ -544,7 +544,7 @@ void Render::pass2()
 		m_cameraPos.z);
 
 	//glUniform3f(m_shaderManager->program[PHONE_SHADING].getUniformLocation("Light.Position"), m_lightPos.x, m_lightPos.y, m_lightPos.z);
-	glUniform2ui(m_shaderManager->program[PHONE_SHADING].getUniformLocation("LightSampleSize"), m_lightSampleWidth, m_lightSampleHeight);
+	glUniform2ui(m_shaderManager->program[PHONE_SHADING].getUniformLocation("LightSampleSize"), 1, 1);// m_lightSampleWidth, m_lightSampleHeight);
 	
 	glActiveTexture(GL_TEXTURE5);
 	glBindTexture(GL_TEXTURE_2D, m_lightSamplePosTex);

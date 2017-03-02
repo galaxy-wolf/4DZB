@@ -33,6 +33,8 @@ private:
 	{
 		m_camera.pos.y = 2.0f;
 		m_camera.dir.pitch = -kPiOver2 / 2.0f;
+
+		LoadParam();
 	}
 	~Controller()=default;
 

@@ -10,7 +10,7 @@
 //#define FD_LIGHT_RES_HEIGHT  16// 灯的分辨率 取值范围1~64
 //#define FD_LIGHT_RES_WIDTH  16// 灯的分辨率 取值范围1~64
 
-const int FD_MAX_LP_GRID_SIZE_LOG2 = 7;    // bin尺寸的上限， 目前为512*512， 根据三角形和场景光源的情况自动调整；
+const int FD_MAX_LP_GRID_SIZE_LOG2 = 4;    // bin尺寸的上限， 目前为512*512， 根据三角形和场景光源的情况自动调整；
 
 const int FD_MAX_BT_PIAR_Num = 50 * 1024 * 1024; // 最多有maxBTpairNum 个三角形pair, 过大会影响排序时间，
 

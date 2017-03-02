@@ -261,6 +261,9 @@
     <None Include="FDZB_Soft_Shadow\cuda\Step5_2_shadowCal.inl">
       <Filter>FDZB_soft_shadow\Cuda</Filter>
     </None>
+    <None Include="FDZB_Soft_Shadow\cuda\Step5_2_shadowCalPerSample.inl">
+      <Filter>FDZB_soft_shadow\Cuda</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt" />

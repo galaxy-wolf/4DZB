@@ -64,6 +64,13 @@ __global__ void sampleRectangleAABBcal_kernel()
 	const float2 rectangleSubConstant = (float2)c_fdRectangleSubConstant;
 	const cudaSurfaceObject_t sampleRectangleSurf = c_fdStaticParams.sampleRectangleSurf;
 
+	const float3 upright = c_fdStaticParams.light.upRightCornerPosition;
+	const float3 upleft = c_fdStaticParams.light.upLeftCornerPosition;
+	const float3 downright = c_fdStaticParams.light.downRightCornerPosition;
+	const float3 downleft = c_fdStaticParams.light.downLeftCornerPosition;
+
+	float * const shadowResult = (float*)c_fdStaticParams.shadowValue;
+
 	// AABB
 	float myXmin = FD_F32_MAX, myXmax = -FD_F32_MAX;
 	float myYmin = FD_F32_MAX, myYmax = -FD_F32_MAX;
@@ -76,29 +83,41 @@ __global__ void sampleRectangleAABBcal_kernel()
 
 	if (sampleX < viewportWidth && sampleY < viewportHeight)
 	{
-		float4 samplePos = tex2D(samplePositionTex, sampleX, sampleY);
+		float3 samplePos = make_float3(tex2D(samplePositionTex, sampleX, sampleY));
+		float3 n = make_float3(tex2D(sampleNormalTex, sampleX, sampleY));
+
 		float3 rect;
-		if (!isnan(samplePos.x)) // 剔除屏幕上的无效采样点;
+		if (!isnan(samplePos.x))           // 剔除屏幕上的无效采样点;
 		{
-			// set valid;
-			valid[sampleY * viewportWidth + sampleX] = 1;
+			if (dot(upright - samplePos, n) <= 0 && // 剔除反面像素;
+				dot(upleft - samplePos, n) <= 0 &&
+				dot(downleft - samplePos, n) <= 0 &&
+				dot(downright - samplePos, n) <= 0)
+			{
+				shadowResult[sid] = 1.0f;
+			}
+			else
+			{
+				// set valid;
+				valid[sampleY * viewportWidth + sampleX] = 1;
 
-			FD::makeRectangle(rect, upRightMat, make_float3(samplePos));
+				FD::makeRectangle(rect, upRightMat, samplePos);
 
-			myXmin = rect.x;
-			myXmax = rect.x + rectangleFactor.x / rect.z - rectangleSubConstant.x;
-			myYmin = rect.y;
-			myYmax = rect.y + rectangleFactor.y / rect.z - rectangleSubConstant.y;
-			myZmin = rect.z;
-			myZmax = rect.z;
+				myXmin = rect.x;
+				myXmax = rect.x + rectangleFactor.x / rect.z - rectangleSubConstant.x;
+				myYmin = rect.y;
+				myYmax = rect.y + rectangleFactor.y / rect.z - rectangleSubConstant.y;
+				myZmin = rect.z;
+				myZmax = rect.z;
 
-			myXsum = rectangleFactor.x / rect.z - rectangleSubConstant.x;
-			myYsum = rectangleFactor.y / rect.z - rectangleSubConstant.y;
-			
-			//if (myXmax < myXmin || myYmax < myYmin) {
-			//	myXsum = 1;
-			//	myYsum = 1;
-			//}
+				myXsum = rectangleFactor.x / rect.z - rectangleSubConstant.x;
+				myYsum = rectangleFactor.y / rect.z - rectangleSubConstant.y;
+
+				//if (myXmax < myXmin || myYmax < myYmin) {
+				//	myXsum = 1;
+				//	myYsum = 1;
+				//}
+			}
 		}
 		surf2DLayeredwrite(make_float4(myXmin, myYmin, myZmin, 1.0f), sampleRectangleSurf, sampleX * sizeof(float4), sampleY, 0, cudaBoundaryModeTrap);
 		surf2DLayeredwrite(make_float4(myXmax, myYmax, myZmax, 1.0f), sampleRectangleSurf, sampleX * sizeof(float4), sampleY, 1, cudaBoundaryModeTrap);
