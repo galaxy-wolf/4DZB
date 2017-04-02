@@ -73,6 +73,7 @@
     <None Include="FDZB_Soft_Shadow\cuda\binRaster.inl" />
     <None Include="FDZB_Soft_Shadow\cuda\blockAABBReduce.inl" />
     <None Include="FDZB_Soft_Shadow\cuda\FDprojection.inl" />
+    <None Include="FDZB_Soft_Shadow\cuda\moveModel.inl" />
     <None Include="FDZB_Soft_Shadow\cuda\Step0_triangleSetup.inl" />
     <None Include="FDZB_Soft_Shadow\cuda\Step2_1_samplerRectangleAABB.inl" />
     <None Include="FDZB_Soft_Shadow\cuda\Step2_2_modelRectangleAABB.inl" />

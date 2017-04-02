@@ -9,6 +9,8 @@
 
 namespace FD{
 
+	void moveModel(float m[16]);
+
 	// init
 	void FDinit();
 

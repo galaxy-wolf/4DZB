@@ -9,6 +9,8 @@
 #include "util\ColumnsMajorMatrix4x4.h"
 #include "util\Color.h"
 
+#include <glm\glm.hpp>
+#include <glm/gtx/transform.hpp>
 #include "FDZB_Soft_Shadow\api.h"
 
 using namespace std;
@@ -127,6 +129,9 @@ void Display() {
 }
 
 
+
+
+
 // 不限制帧率，每帧开始时，先更新场景，然后绘制。
 // 
 void Frame() {
@@ -134,6 +139,37 @@ void Frame() {
 	// update light pos, radius
 
 	// update model matrix.
+
+	if (Controller::getInstance().moveModel)
+	{
+		static float movePos = 0.0f;
+		static float moveDelt = 0.1f;
+
+		movePos += moveDelt;
+
+		if (movePos > 3.0f || movePos < -3.0f)
+			moveDelt *= -1;
+			
+		Matrix3x4 m;
+		m.setupTanslation(vector3(moveDelt, 0.0f, 0.0f));
+
+		MeshManager& meshM = MeshManager::getInstance();
+		Mesh & modle = meshM.m_meshes[1];
+		modle.m_ObjectToWorldMatrix *= m;
+
+		float _m[16];
+
+		_m[0] = m.m11; _m[4] = m.m12; _m[8] =  m.m13; _m[12] = m.tx;
+		_m[1] = m.m21; _m[5] = m.m22; _m[9] =  m.m23; _m[13] = m.ty;
+		_m[2] = m.m31; _m[6] = m.m32; _m[10] = m.m33; _m[14] = m.tz;
+		_m[3] = 0.0f ; _m[7] = 0.0f ; _m[11] =  0.0f; _m[15] = 1.0f;
+
+
+		FD::moveModel(_m);
+
+	}
+	
+
 
 	// update cuda model;
 	

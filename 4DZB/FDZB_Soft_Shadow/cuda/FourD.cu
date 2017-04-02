@@ -254,4 +254,6 @@ extern "C" void inline setRefLightPos()
 #include "Step5_2_calRef.inl"
 #include "Step5_2_shadowCalPerSample.inl"
 
+#include "moveModel.inl"
+
 

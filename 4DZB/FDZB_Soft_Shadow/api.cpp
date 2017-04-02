@@ -14,6 +14,12 @@
 
 namespace FD{
 
+	void moveModel(float m[16])
+	{
+		cudaModeTransform(m);
+	}
+
+
 	void getDeviceInfo()
 	{
 		cudaGetDevice(&my_device.deviceID);

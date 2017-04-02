@@ -27,9 +27,11 @@ public:
 	FPScamera m_camera;
 	RectAreaLight m_light;
 
+	bool moveModel;
+
 private:
 	// Ë½ÓÐ²Ù×÷
-	Controller() :m_lastX(0), m_lastY(0), m_enableMouseMove(false) 
+	Controller() :m_lastX(0), m_lastY(0), m_enableMouseMove(false), moveModel(false)
 	{
 		m_camera.pos.y = 2.0f;
 		m_camera.dir.pitch = -kPiOver2 / 2.0f;

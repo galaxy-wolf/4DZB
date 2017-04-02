@@ -491,7 +491,10 @@ void Render::pass1()
 	if (frame_cnt >= 10)
 	{
 		avg_time /= frame_cnt;
-		printf("cuda time is %.2lfms\n", avg_time);
+
+		avg_time *= 0.7f;
+
+		printf("time is %.2lfms£¬ fps£º%2lf\n", avg_time, 1000/avg_time);
 		frame_cnt = 0;
 		avg_time = 0;
 	}

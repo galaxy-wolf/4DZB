@@ -53,12 +53,27 @@ namespace FD{
 
 			bindToTexture();
 		}
+
+		void mapVBO()
+		{
+			checkCudaErrors(cudaGraphicsMapResources(1, &vboRes, 0));
+			checkCudaErrors(cudaGraphicsResourceGetMappedPointer((void **)&vboPtr, &vboNumBytes,
+				vboRes));
+			vNum = vboNumBytes / vertexSizeBytes;
+			vertexSizeFloat = vertexSizeBytes / sizeof(float);
+		}
+
 		void unmap()
 		{
 			unbindTexture();
 
 			checkCudaErrors(cudaGraphicsUnmapResources(1, &vboRes, NULL));
 			checkCudaErrors(cudaGraphicsUnmapResources(1, &iboRes, NULL));
+		}
+
+		void unmapVBO()
+		{
+			checkCudaErrors(cudaGraphicsUnmapResources(1, &vboRes, NULL));
 		}
 
 		cudaTextureObject_t getTexture(){ return m_tex; }

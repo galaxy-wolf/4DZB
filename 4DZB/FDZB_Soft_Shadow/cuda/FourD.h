@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <string>
+#include <glm/glm.hpp>
 
 #include "PrivateDefs.h"
 #include "../util/Util.h"
@@ -151,4 +152,7 @@ void shadowCal();
 void setBankSize();
 void refCal();
 void shadowCal_perSample();
+
+
+void cudaModeTransform( float m[16]);
 #endif// __FOURD_CUH__

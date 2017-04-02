@@ -79,6 +79,13 @@ void Controller::keyboard(unsigned char key, int x, int y) {
 		SaveScreenShot();
 		break;
 
+	case 'm':
+		moveModel = !moveModel;
+
+		if (moveModel)
+			printf("move model\n");
+		break;
+
 
 	default:
 		break;
